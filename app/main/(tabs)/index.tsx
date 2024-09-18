@@ -1,11 +1,10 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Login() {
     return (
         <View style={style.container}>
-            <Button onPress={() => {router.replace('/main')}}><ButtonText>Primeiro botão</ButtonText></Button>
+            <Button><ButtonText>Primeiro botão</ButtonText></Button>
         </View>
     )
 }
