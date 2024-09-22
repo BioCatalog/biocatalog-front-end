@@ -1,21 +1,50 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
-
+import { Tabs, router } from 'expo-router';
+import React from 'react';
+import { Image } from 'react-native';
 export default function TabLayout() {
+
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: 'green' }}>
+    <Tabs screenOptions={{
+      tabBarActiveTintColor: '#021A06',
+      tabBarInactiveTintColor: 'white',
+      tabBarStyle: { backgroundColor: 'green' },
+      headerStyle: { backgroundColor: 'green' },
+    }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Busca',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
+          title: 'Inicio',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="archives"
         options={{
-          title: 'Configuraçãor',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          title: 'Meus Arquivos',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="th-list" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="newCatalog"
+        listeners={{tabPress: () => { router.replace('./catalog/new') }}}
+        options={{
+          title: 'Novo registro',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus-circle" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="catalog"
+        options={{
+          title: 'Catálogos',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="bookmark" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="user/profile"
+        options={{
+          title: 'Meu Perfil',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
         }}
       />
     </Tabs>

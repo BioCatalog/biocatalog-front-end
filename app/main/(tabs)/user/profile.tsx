@@ -1,10 +1,10 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+
 export default function Login() {
     return (
-        
         <View style={style.container}>
-            <Button><ButtonText>Primeiro botão</ButtonText></Button>
+            <Button><ButtonText>Primeiro Botao</ButtonText></Button>
         </View>
     )
 }
