@@ -1,7 +1,7 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import * as FileSystem from 'expo-file-system'
 
 export default function Camera() {
@@ -10,7 +10,7 @@ export default function Camera() {
 
     const photoFileName = FileSystem.documentDirectory + 'photo.jpg'
 
-    let camera: CameraView | null
+    let camera: CameraView | null;
     
     const takePicture = async () => {
         if (perm) {
@@ -24,11 +24,13 @@ export default function Camera() {
                 })
             }
         } else{
+            alert('Sem permissão');
         }
     }
 
     const verificarFoto = async() => {
         const file = await FileSystem.getInfoAsync(photoFileName)
+        
         if(file.exists){
             setPhoto(file.uri)
         }
@@ -45,8 +47,9 @@ export default function Camera() {
             <CameraView facing="back" ref={(ref) => { camera = ref }}
                 style={{ width: 300, height: 300 }}
             />
-            <Button style={{ backgroundColor: 'black', padding: 20 }} onPress={() => takePicture()}>
-                Tirar foto
+
+            <Button style={{ backgroundColor: 'green', padding: 20 }} onPress={() => takePicture()}>
+                <ButtonText>Tirar foto</ButtonText>
             </Button>
             {photo && (<Image source={{ uri: photo }} style={{ width: 250, height: 250, borderRadius: 125 }} />)}
         </View>
