@@ -27,7 +27,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="newCatalog"
-        listeners={{tabPress: () => { router.replace('./catalog/new') }}}
+        listeners={{tabPress: () => { router.replace('../../catalog/new') }}}
         options={{
           title: 'Novo registro',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus-circle" color={color} />,
