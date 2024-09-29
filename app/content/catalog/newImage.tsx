@@ -3,54 +3,62 @@ import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import * as FileSystem from 'expo-file-system'
+import StyledButton from "@/components/styled-button";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { router } from "expo-router";
 
 export default function Camera() {
-    const [perm, reqPerm] = useCameraPermissions()
-    const [photo, setPhoto] = useState<string | null>(null)
-
-    const photoFileName = FileSystem.documentDirectory + 'photo.jpg'
+    const [perm, reqPerm] = useCameraPermissions();
+    const [photo, setPhoto] = useState<string | null>(null);
+    const [photoName, setPhoneName] = useState('photo.jpg');
+    const [photoIndex, setPhotoIndex] = useState(0);
 
     let camera: CameraView | null;
-    
-    const takePicture = async () => {
-        if (perm) {
-            const photo = await camera?.takePictureAsync()
 
-            if (photo?.uri){
-                setPhoto(photo.uri)
+    const takePicture = async () => {
+        const photoFileName = FileSystem.documentDirectory + `photo${photoIndex}.jpg`;
+        setPhoneName(photoFileName);
+
+        if (perm) {
+            const photo = await camera?.takePictureAsync();
+
+            if (photo?.uri) {
+                setPhoto(photo.uri);
+
                 await FileSystem.copyAsync({
                     from: photo.uri,
                     to: photoFileName
                 })
             }
-        } else{
+
+            setPhotoIndex(photoIndex + 1);
+        } else {
             alert('Sem permissão');
         }
     }
 
-    const verificarFoto = async() => {
-        const file = await FileSystem.getInfoAsync(photoFileName)
-        
-        if(file.exists){
+    const verificarFoto = async () => {
+        const file = await FileSystem.getInfoAsync(photoName)
+
+        if (file.exists) {
             setPhoto(file.uri)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         verificarFoto()
-    }, [])
+    }, [photoName])
 
     if (!perm) return <></>
 
     return (
         <View style={styles.container}>
-            <CameraView facing="back" ref={(ref) => { camera = ref }}
-                style={{ width: 300, height: 300 }}
-            />
+            <FontAwesome size={30} name="arrow-left" onPress={() => { router.back() }} />
 
-            <Button style={{ backgroundColor: 'green', padding: 20 }} onPress={() => takePicture()}>
-                <ButtonText>Tirar foto</ButtonText>
-            </Button>
+            <CameraView facing="back" ref={(ref) => { camera = ref }}
+                style={{ width: 300, height: 300 }} />
+
+            <StyledButton text="Tirar foto" onClick={takePicture} />
             {photo && (<Image source={{ uri: photo }} style={{ width: 250, height: 250, borderRadius: 125 }} />)}
         </View>
     )
