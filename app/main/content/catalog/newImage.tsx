@@ -1,23 +1,20 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { Button, ButtonText } from "@/components/ui/button";
 import * as FileSystem from 'expo-file-system'
 import StyledButton from "@/components/styled-button";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { router } from "expo-router";
 
 export default function Camera() {
     const [perm, reqPerm] = useCameraPermissions();
-    const [photo, setPhoto] = useState<string | null>(null);
-    const [photoName, setPhoneName] = useState('photo.jpg');
+    const [photo, setPhoto] = useState('');
     const [photoIndex, setPhotoIndex] = useState(0);
 
     let camera: CameraView | null;
 
     const takePicture = async () => {
         const photoFileName = FileSystem.documentDirectory + `photo${photoIndex}.jpg`;
-        setPhoneName(photoFileName);
+        setPhoto(photoFileName);
 
         if (perm) {
             const photo = await camera?.takePictureAsync();
@@ -37,8 +34,8 @@ export default function Camera() {
         }
     }
 
-    const verificarFoto = async () => {
-        const file = await FileSystem.getInfoAsync(photoName)
+    const verifyPhoto = async () => {
+        const file = await FileSystem.getInfoAsync(photo);
 
         if (file.exists) {
             setPhoto(file.uri)
@@ -46,20 +43,22 @@ export default function Camera() {
     }
 
     useEffect(() => {
-        verificarFoto()
-    }, [photoName])
+        verifyPhoto()
+    }, [photo])
 
     if (!perm) return <></>
 
     return (
         <View style={styles.container}>
-            <FontAwesome size={30} name="arrow-left" onPress={() => { router.back() }} />
-
             <CameraView facing="back" ref={(ref) => { camera = ref }}
                 style={{ width: 300, height: 300 }} />
 
-            <StyledButton text="Tirar foto" onClick={takePicture} />
             {photo && (<Image source={{ uri: photo }} style={{ width: 250, height: 250, borderRadius: 125 }} />)}
+
+            <View style={styles.optionsView}>
+                <StyledButton text="Voltar" color="red" onClick={() => router.back()} />
+                <StyledButton text="Tirar foto" onClick={() => takePicture()} />
+            </View>
         </View>
     )
 }
@@ -71,5 +70,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         padding: 20,
+    },
+
+    optionsView: {
+        position: 'static',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 15
     }
 })

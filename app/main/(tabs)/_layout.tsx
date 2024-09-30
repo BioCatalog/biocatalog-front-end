@@ -1,7 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs, router } from 'expo-router';
 import React from 'react';
-import { Image } from 'react-native';
 export default function TabLayout() {
 
   return (
@@ -27,7 +26,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="newCatalog"
-        listeners={{tabPress: () => { router.replace('../../content/catalog/registrar') }}}
+        listeners={{tabPress: () => { router.replace('../content/catalog/register') }}}
         options={{
           title: 'Novo registro',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus-circle" color={color} />,
@@ -41,7 +40,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="user/profile"
+        name="profile"
         options={{
           title: 'Meu Perfil',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,

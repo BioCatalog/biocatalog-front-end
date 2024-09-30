@@ -1,5 +1,5 @@
 import { Button, ButtonText } from "@/components/ui/button";
-import { StatusBar, StyleSheet, Text, View} from "react-native";
+import { StyleSheet, Text, View} from "react-native";
 import { useEffect } from "react";
 import { router } from "expo-router";
 
