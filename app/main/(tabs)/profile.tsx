@@ -1,19 +1,20 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Login() {
     return (
         <View style={style.container}>
-            <Button onPress={() => { router.replace('/main') }}><ButtonText>Primeiro Botao</ButtonText></Button>
-        </View >
+            <Text>Meu Perfil</Text>
+            <Button style={{ backgroundColor: '#A41718' }} onPress={() => router.replace('/')}><ButtonText>Sair</ButtonText></Button>
+        </View>
     )
 }
 
 const style = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignContent: 'center',
+        alignSelf: 'center',
         flex: 1
     }
 })
