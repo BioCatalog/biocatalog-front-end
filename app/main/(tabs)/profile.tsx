@@ -5,7 +5,8 @@ import { StyleSheet, Text, View } from "react-native";
 export default function Login() {
     return (
         <View style={style.container}>
-            <Button style={{backgroundColor: '#A41718'}} onPress={() => router.replace('/')}><ButtonText>Sair</ButtonText></Button>
+            <Text>Meu Perfil</Text>
+            <Button style={{ backgroundColor: '#A41718' }} onPress={() => router.replace('/')}><ButtonText>Sair</ButtonText></Button>
         </View>
     )
 }
@@ -13,7 +14,7 @@ export default function Login() {
 const style = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignContent: 'center',
+        alignSelf: 'center',
         flex: 1
     }
 })

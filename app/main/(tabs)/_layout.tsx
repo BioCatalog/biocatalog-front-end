@@ -5,9 +5,9 @@ export default function TabLayout() {
 
   return (
     <Tabs screenOptions={{
-      tabBarActiveTintColor: '#021A06',
-      tabBarInactiveTintColor: 'white',
-      tabBarStyle: { backgroundColor: 'green' },
+      tabBarActiveTintColor: '#27AE60',
+      tabBarInactiveTintColor: 'black',
+      tabBarStyle: { backgroundColor: '#C1F4AF' },
       headerStyle: { backgroundColor: 'green' },
     }}>
       <Tabs.Screen
@@ -26,10 +26,9 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="newCatalog"
-        listeners={{tabPress: () => { router.replace('../content/catalog/register') }}}
         options={{
           title: 'Novo registro',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="plus-circle" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome size={50} name="plus-circle" color={'#659867'} style={{zIndex: 1, position: 'absolute' }} />,
         }}
       />
       <Tabs.Screen

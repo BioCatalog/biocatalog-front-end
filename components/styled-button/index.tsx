@@ -21,7 +21,6 @@ export default function StyledButton({text, onClick, color, textColor, ...rest}:
 
 const style = StyleSheet.create({
     button: {
-        margin: 10,
         alignItems: 'center',
         justifyContent: 'center',
     }

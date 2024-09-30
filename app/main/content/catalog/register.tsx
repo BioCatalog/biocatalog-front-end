@@ -1,54 +1,44 @@
 import { router } from "expo-router";
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import * as FileSystem from 'expo-file-system'
+import { StyleSheet, View } from "react-native";
 import PhotoBox from "@/components/catalog/add-boxes";
 import StyledButton from "@/components/styled-button";
 import CatalogInputs from "@/components/catalog/inputs";
 import { ScrollView } from "react-native";
+import Camera from "./newImage";
+
+import * as FileSystem from 'expo-file-system'
 
 export default function RegisterSpecie() {
     const [photo, setPhoto] = useState<string[]>([]);
-    let photosQnt = 0;
+    const [cameraVisible, setCameraVisible] = useState(false);
 
-    const loadPhotos = async (index: number) => {
-        const photoFileName = FileSystem.documentDirectory + `photo${index}.jpg`;
-
-        const file = await FileSystem.getInfoAsync(photoFileName)
-            .then((res) => {
-                if (res.exists) {
-                    setPhoto(photo => [...photo, res.uri]);
-                    loadPhotos(index + 1);
-                    photosQnt = index;
-                }
-            }).catch((e) => {
-
-            });
-    }
-
-    useEffect(() => {
-        setPhoto([]);
-        photosQnt = 0;
-        loadPhotos(0);
-    }, []);
-
-    const clearPhotos = async () => {
+    const cancelRegister = async () => {
         photo.map(async (content) => {
             const file = await FileSystem.deleteAsync(content);
-        })
+        });
+
+        router.replace('/main/(tabs)');
+    }
+
+    const handleCameraVisible = () => {
+        setCameraVisible(!cameraVisible);
     }
 
     return (
         <View style={styles.container}>
+            {cameraVisible && <Camera photoIndex={photo.length} setPhotos={setPhoto} onCancel={handleCameraVisible} />}
+
             <ScrollView style={styles.scrollView}>
-                <PhotoBox photosURL={photo} />
+                <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
                 <CatalogInputs />
             </ScrollView>
 
             <View style={styles.optionsView}>
-                <StyledButton text="Cancelar" color="red" onClick={() => { clearPhotos(), router.replace('/main') }} />
+                <StyledButton text="Cancelar" color="red" onClick={cancelRegister} />
                 <StyledButton text="Registrar" color="green" onClick={() => { }} />
             </View>
+
         </View>
     )
 }
@@ -56,7 +46,6 @@ export default function RegisterSpecie() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 10
     },
 
     buttonBack: {
@@ -64,12 +53,17 @@ const styles = StyleSheet.create({
     },
 
     optionsView: {
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
     },
 
     scrollView: {
         flex: 1,
-        height: '100%'
+        padding: 15
     }
 });

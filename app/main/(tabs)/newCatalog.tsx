@@ -1,14 +1,13 @@
-import { Button, ButtonText } from "@/components/ui/button";
 import { StyleSheet, Text, View} from "react-native";
 import { useEffect } from "react";
 import { router } from "expo-router";
 
-export default function Login() {
-    useEffect(() => { router.replace('./catalog/new') }, []);
+export default function NewCatalog() {
+    useEffect(() => { router.replace('/main/content/catalog/register') }, []);
 
     return (        
-        <View style={style.container}>
-            <Button><ButtonText>Primeiro botão</ButtonText></Button>
+        <View>
+            <Text>Redirecionando...</Text>
         </View>
     )
 }
@@ -16,7 +15,7 @@ export default function Login() {
 const style = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignContent: 'center',
+        alignSelf: 'center',
         flex: 1
     }
 })

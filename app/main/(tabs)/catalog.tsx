@@ -1,10 +1,9 @@
-import { Button, ButtonText } from "@/components/ui/button";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Login() {
+export default function Catalog() {
     return (
         <View style={style.container}>
-            <Button><ButtonText>Primeiro botão</ButtonText></Button>
+            <Text>Catalogos</Text>
         </View>
     )
 }
@@ -12,7 +11,7 @@ export default function Login() {
 const style = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignContent: 'center',
+        alignSelf: 'center',
         flex: 1
     }
 })
