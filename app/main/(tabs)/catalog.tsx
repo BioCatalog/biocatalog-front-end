@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Catalog() {
+export default function MyCatalog() {
     return (
         <View style={style.container}>
             <Text>Catalogos</Text>

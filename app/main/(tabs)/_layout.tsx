@@ -5,6 +5,7 @@ export default function TabLayout() {
 
   return (
     <Tabs screenOptions={{
+      headerTintColor: 'white',
       tabBarActiveTintColor: '#27AE60',
       tabBarInactiveTintColor: 'black',
       tabBarStyle: { backgroundColor: '#C1F4AF' },
@@ -18,9 +19,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="archives"
+        name="catalog"
         options={{
-          title: 'Meus Arquivos',
+          title: 'Catálogos',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="th-list" color={color} />,
         }}
       />
@@ -28,13 +29,13 @@ export default function TabLayout() {
         name="newCatalog"
         options={{
           title: 'Novo registro',
-          tabBarIcon: ({ color }) => <FontAwesome size={50} name="plus-circle" color={'#659867'} style={{zIndex: 1, position: 'absolute' }} />,
+          tabBarIcon: () => <FontAwesome size={50} name="plus-circle" color={'#659867'} style={{ zIndex: 1, position: 'absolute' }} />,
         }}
       />
       <Tabs.Screen
-        name="catalog"
+        name="collection"
         options={{
-          title: 'Catálogos',
+          title: 'Nova coleção',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="bookmark" color={color} />,
         }}
       />
