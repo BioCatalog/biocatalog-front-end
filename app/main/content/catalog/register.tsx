@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ToastAndroid, View } from "react-native";
 import PhotoBox from "@/components/catalog/add-boxes";
 import StyledButton from "@/components/styled-button";
 import CatalogInputs from "@/components/catalog/inputs";
@@ -8,12 +8,29 @@ import { ScrollView } from "react-native";
 import Camera from "./newImage";
 
 import * as FileSystem from 'expo-file-system'
+import { RecordProps } from "@/interfaces";
+import { useRecordDatabase } from "@/database/useRecordDatabase";
 
 export default function RegisterSpecie() {
+    const [record, setRecord] = useState<RecordProps>({} as RecordProps);
     const [photo, setPhoto] = useState<string[]>([]);
     const [cameraVisible, setCameraVisible] = useState(false);
 
-    const cancelRegister = async () => {
+    const recordDatabase = useRecordDatabase();
+
+    function handleRegister() {
+        if (record) {
+            recordDatabase.create(record).then(() => {
+                ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                router.replace('/main/(tabs)/catalog');
+            }).catch((e) => {
+                ToastAndroid.showWithGravity('Não foi possível registrar' + e, ToastAndroid.SHORT, ToastAndroid.TOP);
+            });
+
+        }
+    }
+
+    async function handleCancel() {
         photo.map(async (content) => {
             const file = await FileSystem.deleteAsync(content);
         });
@@ -21,9 +38,13 @@ export default function RegisterSpecie() {
         router.replace('/main/(tabs)');
     }
 
-    const handleCameraVisible = () => {
+    async function handleCameraVisible() {
         setCameraVisible(!cameraVisible);
     }
+
+    useEffect(() => {
+        setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
+    }, [photo]);
 
     return (
         <View style={styles.container}>
@@ -31,12 +52,12 @@ export default function RegisterSpecie() {
 
             <ScrollView style={styles.scrollView}>
                 <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
-                <CatalogInputs />
+                <CatalogInputs record={record} setRecord={setRecord} />
             </ScrollView>
 
             <View style={styles.optionsView}>
-                <StyledButton text="Cancelar" color="red" onClick={cancelRegister} />
-                <StyledButton text="Registrar" color="green" onClick={() => { }} />
+                <StyledButton text="Cancelar" color="red" onClick={handleCancel} />
+                <StyledButton text="Registrar" color="green" onClick={handleRegister} />
             </View>
 
         </View>

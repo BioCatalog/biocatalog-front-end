@@ -1,18 +1,38 @@
 import StyledInput from "@/components/styled-input";
 import { ButtonIcon, Button } from "@/components/ui/button";
 import { AddIcon, Icon } from "@/components/ui/icon";
+import { useCatalogDatabase } from "@/database/useCatalogDatabase";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
 
-export default function SelectOptionsSpecies() {
-    const options = ['Passarinho', 'Passarinho1', 'Passarinho2'];
+interface SOSpeciesProps {
+    onChange: (text: string) => void
+}
+
+export default function SelectOptionsSpecies({ onChange }: SOSpeciesProps) {
+    const [options, setOptions] = useState<Array<{ name: string, id: string }>>([]);
+    const catalog = useCatalogDatabase();
+
+    async function loadOptions() {
+        const opt = await catalog.getAsOption();
+
+        if (opt) {
+            setOptions(opt);
+        }
+    }
+
+    useEffect(() => {
+        loadOptions();
+    }, []);
 
     return (
         <View style={styles.container}>
             <View style={styles.select_input_container}>
-                <StyledInput type="select-options" label="Especie" options={options} placeholder="Selecione a Especie" />
+                <StyledInput type="select-options" label="Especie" options={options} onChangeText={onChange} placeholder="Selecione a Especie" />
             </View>
-            <Button size="lg" className="rounded-full p-3.5" style={styles.addButon}>
+            <Button size="lg" className="rounded-full p-3.5" style={styles.addButon} onPress={() => { router.push('/main/content/collection') }}>
                 <ButtonIcon>
                     <Icon as={AddIcon} />
                 </ButtonIcon>
