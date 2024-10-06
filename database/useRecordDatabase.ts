@@ -1,4 +1,4 @@
-import { RecordProps } from '@/interfaces';
+import { RecordImagesProps, RecordProps } from '@/interfaces';
 import { useSQLiteContext } from 'expo-sqlite';
 
 export function useRecordDatabase() {
@@ -6,11 +6,11 @@ export function useRecordDatabase() {
 
     async function create(param: Omit<RecordProps, "id">) {
         const statementRecord = await database.prepareAsync(
-            "INSERT INTO record (catalog, createDate, comment, local) VALUES ($catalog, $createDate, $comment, $local)"
+            'INSERT INTO record (catalog, createDate, comment, local) VALUES ($catalog, $createDate, $comment, $local)'
         )
 
         const statementImages = await database.prepareAsync(
-            "INSERT INTO record (record, imageURL) VALUES ($record, $imageURL)"
+            'INSERT INTO recordImages (record, imageURL) VALUES ($record, $imageURL)'
         )
 
         try {
@@ -23,12 +23,18 @@ export function useRecordDatabase() {
 
             const insertedRowId = result.lastInsertRowId.toLocaleString();
 
-            param.imageURL?.forEach(async (image) => {
-                await statementImages.executeAsync({
-                    $record: insertedRowId,
-                    $imageURL: image,
-                });
-            })
+            if (insertedRowId) {
+                if (param.imageURL) {
+                    param.imageURL.forEach(async (image) => {
+                        console.log(image.imageURL);
+
+                        await statementImages.executeAsync({
+                            $record: insertedRowId,
+                            $imageURL: image.imageURL,
+                        });
+                    })
+                }
+            }
 
             return { insertedRowId };
         } catch (error) {
@@ -46,7 +52,7 @@ export function useRecordDatabase() {
     }
 
     async function getImages() {
-        const data: {imageURL: string}[] = await database.getAllAsync('SELECT * FROM recordImages');
+        const data: Array<RecordImagesProps> = await database.getAllAsync('SELECT * FROM recordImages');
 
         return data;
     }

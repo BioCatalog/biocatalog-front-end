@@ -1,7 +1,7 @@
 import { type SQLiteDatabase } from 'expo-sqlite';
 
 export default async function initializeDatabase(database: SQLiteDatabase) {
-    await database.runAsync(`
+    await database.execAsync(`
         CREATE TABLE IF NOT EXISTS catalog (
                 id INTEGER PRIMARY KEY NOT NULL,
                 name TEXT NOT NULL,
@@ -21,12 +21,23 @@ export default async function initializeDatabase(database: SQLiteDatabase) {
                 createDate DATETIME,
                 comment TEXT,
                 local STRING,
-                FOREIGN KEY (catalog) REFERENCES catalog(id),
+                FOREIGN KEY (catalog) REFERENCES catalog(id)
             );
             CREATE TABLE IF NOT EXISTS recordImages (
                 id INTEGER PRIMARY KEY NOT NULL,
                 record INTEGER,
                 imageURL TEXT,
-                FOREIGN KEY (record) REFERENCES record(id),
+                FOREIGN KEY (record) REFERENCES record(id)
             )`);
+}
+
+
+export async function refactorDatabase(database: SQLiteDatabase) {
+    await database.execAsync(`
+        DROP TABLE recordImages;
+        DROP TABLE record;
+        DROP TABLE catalog;
+        `);
+
+        initializeDatabase(database);
 }

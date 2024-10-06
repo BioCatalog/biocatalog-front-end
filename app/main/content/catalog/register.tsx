@@ -20,9 +20,13 @@ export default function RegisterSpecie() {
 
     function handleRegister() {
         if (record) {
-            recordDatabase.create(record);
+            recordDatabase.create(record).then(() => {
+                ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                router.replace('/main/(tabs)/catalog');
+            }).catch((e) => {
+                ToastAndroid.showWithGravity('Não foi possível registrar' + e, ToastAndroid.SHORT, ToastAndroid.TOP);
+            });
 
-            ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -37,6 +41,10 @@ export default function RegisterSpecie() {
     async function handleCameraVisible() {
         setCameraVisible(!cameraVisible);
     }
+
+    useEffect(() => {
+        setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
+    }, [photo]);
 
     return (
         <View style={styles.container}>

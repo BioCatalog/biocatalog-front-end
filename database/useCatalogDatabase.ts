@@ -6,8 +6,8 @@ export function useCatalogDatabase() {
 
     async function create(param: Omit<CatalogProps, "id">) {
         const statement = await database.prepareAsync(
-            "INSERT INTO catalog (name, lifeTime, plantTime, cultivation, warning) VALUES ($name, $lifeTime, $plantTime, $cultivation, $warning)"
-        )
+            'INSERT INTO catalog (name, lifeTime, plantTime, cultivation, warning) VALUES ($name, $lifeTime, $plantTime, $cultivation, $warning)'
+        );
 
         try {
             const result = await statement.executeAsync({

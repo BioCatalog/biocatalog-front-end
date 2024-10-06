@@ -15,8 +15,14 @@ export interface CatalogProps {
 export interface RecordProps {
     id?: string
     catalog: string
-    imageURL: string[]
     createDate?: string
     comment?: string
     local?: string
+    imageURL: Array<RecordImagesProps>
+}
+
+export interface RecordImagesProps {
+    id?: string
+    record?: string
+    imageURL: string
 }

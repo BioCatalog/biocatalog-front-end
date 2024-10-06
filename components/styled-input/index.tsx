@@ -34,9 +34,9 @@ export default function StyledInput({ label, placeholder, type, options, onChang
                     :
 
                     type == 'select-options' ?
-                        <Select>
+                        <Select onValueChange={onChangeText}>
                             <SelectTrigger variant="outline" size="md" style={{justifyContent: 'space-between'}}>
-                                <SelectInput placeholder={placeholder} onChangeText={onChangeText} />
+                                <SelectInput placeholder={placeholder} />
                                 <SelectIcon className="mr-3" as={ChevronDownIcon} />
                             </SelectTrigger>
                             <SelectPortal>

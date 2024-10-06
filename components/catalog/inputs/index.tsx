@@ -1,7 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import SelectOptionsSpecies from "../select-options-species";
 import StyledInput from "@/components/styled-input";
-import MapView, { Marker } from 'react-native-maps';
 import { useState, useEffect } from "react";
 
 import * as Location from 'expo-location';

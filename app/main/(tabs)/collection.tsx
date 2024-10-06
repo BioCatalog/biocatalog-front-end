@@ -12,7 +12,11 @@ export default function Collection() {
     function handleCreate() {
         if (!collection.name) return ToastAndroid.showWithGravity('Preencha os campos obrigatórios', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        ToastAndroid.showWithGravity('Criado com sucesso!', ToastAndroid.SHORT, ToastAndroid.TOP);
+        catalogDatabase.create(collection).then(() => {
+            ToastAndroid.showWithGravity('Criado com sucesso!', ToastAndroid.SHORT, ToastAndroid.TOP);
+        }).catch((error) => {
+            ToastAndroid.showWithGravity('Erro ao criar' + error, ToastAndroid.SHORT, ToastAndroid.TOP);
+        })
     }
 
     return (
