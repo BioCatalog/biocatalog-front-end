@@ -4,59 +4,65 @@ import { VStack } from "../ui/vstack";
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from "../ui/select";
 import { ChevronDownIcon } from "../ui/icon";
 import { Textarea, TextareaInput } from "../ui/textarea";
-import StyledLabel from "./label";
+import StyledFormControl from "../styled-form-control";
 
 interface StyledInputProps {
     label?: string
     placeholder?: string
     onChangeText?: (text: string) => void
     type: 'text' | 'password' | 'select-options' | 'text-area'
-    options?: string[]
+    options?: Array<{ name: string, id: string }>
     defaultValue?: string
     isRead?: boolean
+    helper?: string
 }
 
-export default function StyledInput({ label, placeholder, type, options, onChangeText, defaultValue, isRead }: StyledInputProps) {
+export default function StyledInput({ label, helper, placeholder, type, options, onChangeText, defaultValue, isRead }: StyledInputProps) {
     return (
         <VStack space="xs">
-            {label && <StyledLabel text={label} />}
-            {
-                ['text', 'password'].includes(type) ?
+            <StyledFormControl label={label} helper={helper}>
+                {
+                    ['text', 'password'].includes(type) ?
 
-                    <Input isReadOnly={isRead} style={[styles.input]}>
-                        <InputField type={(type == 'text' || type == 'password') ? type : 'text'} placeholder={placeholder} defaultValue={defaultValue ?? defaultValue} />
-                    </Input>
-
-                    :
-
-                    type == 'select-options' ?
-                        <Select>
-                            <SelectTrigger variant="outline" size="md" style={{justifyContent: 'space-between'}}>
-                                <SelectInput placeholder={placeholder} />
-                                <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                            </SelectTrigger>
-                            <SelectPortal>
-                                <SelectBackdrop />
-                                <SelectContent>
-                                    <SelectDragIndicatorWrapper>
-                                        <SelectDragIndicator />
-                                    </SelectDragIndicatorWrapper>
-
-                                    {
-                                        options?.map((option) => (
-                                            <SelectItem key={option} label={option} value={option} />
-                                        ))
-                                    }
-                                </SelectContent>
-                            </SelectPortal>
-                        </Select>
+                        <Input isReadOnly={isRead} style={[styles.input]}>
+                            <InputField
+                                type={(type == 'text' || type == 'password') ? type : 'text'}
+                                placeholder={placeholder}
+                                defaultValue={defaultValue ?? defaultValue}
+                                onChangeText={onChangeText} />
+                        </Input>
 
                         :
 
-                        <Textarea size="md">
-                            <TextareaInput placeholder={placeholder} />
-                        </Textarea>
-            }
+                        type == 'select-options' ?
+                            <Select onValueChange={onChangeText}>
+                                <SelectTrigger variant="outline" size="md" style={{ justifyContent: 'space-between' }}>
+                                    <SelectInput placeholder={placeholder} />
+                                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                                </SelectTrigger>
+                                <SelectPortal>
+                                    <SelectBackdrop />
+                                    <SelectContent>
+                                        <SelectDragIndicatorWrapper>
+                                            <SelectDragIndicator />
+                                        </SelectDragIndicatorWrapper>
+
+                                        {
+                                            options?.map((option) => (
+                                                <SelectItem key={option.id} label={option.name} value={option.id} />
+                                            ))
+                                        }
+                                    </SelectContent>
+                                </SelectPortal>
+                            </Select>
+
+                            :
+
+                            <Textarea size="md">
+                                <TextareaInput onChangeText={onChangeText} placeholder={placeholder} />
+                            </Textarea>
+                }
+            </StyledFormControl>
         </VStack>
     )
 }

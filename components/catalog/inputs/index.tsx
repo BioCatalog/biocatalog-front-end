@@ -1,13 +1,18 @@
 import { View, StyleSheet } from "react-native";
 import SelectOptionsSpecies from "../select-options-species";
 import StyledInput from "@/components/styled-input";
-import MapView, { Marker } from 'react-native-maps';
 import { useState, useEffect } from "react";
 
 import * as Location from 'expo-location';
 import CurrentMaps from "../maps";
+import { RecordProps } from "@/interfaces";
 
-export default function CatalogInputs() {
+interface CatalogInputsProps {
+    record: RecordProps
+    setRecord: React.Dispatch<React.SetStateAction<RecordProps>>
+}
+
+export default function CatalogInputs({ record, setRecord }: CatalogInputsProps) {
     const date = new Date();
 
     const [location, setLocation] = useState<Location.LocationObject | null>();
@@ -26,12 +31,20 @@ export default function CatalogInputs() {
         })();
     }, []);
 
+    function handleChangeOption(value: string) {
+        setRecord({...record, catalog: value});
+    }
+
     return (
         <View style={styles.container}>
-            <SelectOptionsSpecies />
-            <StyledInput placeholder="Faça um comentário" type="text-area" label="Comentário" />
-            <StyledInput isRead={true} defaultValue={`${date.toLocaleDateString('pt-BR')} | ${date.toLocaleTimeString('pt-BR')}`} type="text" label="Data e hora" />
-
+            <SelectOptionsSpecies onChange={handleChangeOption} />
+            <StyledInput placeholder="Faça um comentário" type="text-area" label="Comentário" onChangeText={(value) => {setRecord({...record, comment: value})}} />
+            <StyledInput 
+            onChangeText={(value) => {setRecord({...record, createDate: value})}}
+            isRead={true} 
+            defaultValue={`${date.toLocaleDateString('pt-BR')} | ${date.toLocaleTimeString('pt-BR')}`} 
+            type="text" 
+            label="Data e hora" />
             {
                 location &&
                 <CurrentMaps location={location} />
