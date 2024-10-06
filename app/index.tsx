@@ -1,6 +1,5 @@
 import StyledButton from "@/components/styled-button";
 import StyledInput from "@/components/styled-input";
-import { Button, ButtonText } from "@/components/ui/button";
 import { router } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 

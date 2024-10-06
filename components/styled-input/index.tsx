@@ -11,7 +11,7 @@ interface StyledInputProps {
     placeholder?: string
     onChangeText?: (text: string) => void
     type: 'text' | 'password' | 'select-options' | 'text-area'
-    options?: string[]
+    options?: Array<{name: string, id: string}> 
     defaultValue?: string
     isRead?: boolean
 }
@@ -24,7 +24,11 @@ export default function StyledInput({ label, placeholder, type, options, onChang
                 ['text', 'password'].includes(type) ?
 
                     <Input isReadOnly={isRead} style={[styles.input]}>
-                        <InputField type={(type == 'text' || type == 'password') ? type : 'text'} placeholder={placeholder} defaultValue={defaultValue ?? defaultValue} />
+                        <InputField 
+                        type={(type == 'text' || type == 'password') ? type : 'text'} 
+                        placeholder={placeholder} 
+                        defaultValue={defaultValue ?? defaultValue} 
+                        onChangeText={onChangeText} />
                     </Input>
 
                     :
@@ -32,7 +36,7 @@ export default function StyledInput({ label, placeholder, type, options, onChang
                     type == 'select-options' ?
                         <Select>
                             <SelectTrigger variant="outline" size="md" style={{justifyContent: 'space-between'}}>
-                                <SelectInput placeholder={placeholder} />
+                                <SelectInput placeholder={placeholder} onChangeText={onChangeText} />
                                 <SelectIcon className="mr-3" as={ChevronDownIcon} />
                             </SelectTrigger>
                             <SelectPortal>
@@ -44,7 +48,7 @@ export default function StyledInput({ label, placeholder, type, options, onChang
 
                                     {
                                         options?.map((option) => (
-                                            <SelectItem key={option} label={option} value={option} />
+                                            <SelectItem key={option.id} label={option.name} value={option.id} />
                                         ))
                                     }
                                 </SelectContent>
@@ -54,7 +58,7 @@ export default function StyledInput({ label, placeholder, type, options, onChang
                         :
 
                         <Textarea size="md">
-                            <TextareaInput placeholder={placeholder} />
+                            <TextareaInput onChangeText={onChangeText} placeholder={placeholder} />
                         </Textarea>
             }
         </VStack>

@@ -26,7 +26,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="newCatalog"
+        name="newRecord"
         options={{
           title: 'Novo registro',
           tabBarIcon: () => <FontAwesome size={50} name="plus-circle" color={'#659867'} style={{ zIndex: 1, position: 'absolute' }} />,
