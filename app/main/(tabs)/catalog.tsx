@@ -7,7 +7,7 @@ import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Modal, But
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
-    const [selectedCatalog, setSelectedCatalog] = useState<CatalogProps | null>(null); // Para controlar o modal
+    const [selectedCatalog, setSelectedCatalog] = useState<CatalogProps | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
     const catalog = useCatalogDatabase();
@@ -40,14 +40,12 @@ export default function MyCatalog() {
             <View style={styles.cardContainer}>
                 {data.map((item) => (
                     <TouchableOpacity key={item.id} style={styles.card} onPress={() => openModal(item)}>
-                        <Image source={{ uri: item.imageURL }} style={styles}/>
-                        <Image source={{ uri: item.imageURL }} style={styles.cardImage} />
+                        <Image source={{}} style={styles.cardImage} />
                         <Text style={styles.cardTitle}>{item.name}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
 
-            {/* Modal para exibir mais detalhes */}
             {selectedCatalog && (
                 <Modal
                     animationType="slide"
