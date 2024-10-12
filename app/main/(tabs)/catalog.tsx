@@ -19,10 +19,6 @@ export default function MyCatalog() {
         }
     }
 
-    useEffect(() => {
-        loadData();
-    }, []);
-
     const openModal = (catalog: CatalogProps) => {
         setSelectedCatalog(catalog);
         setModalVisible(true);
@@ -33,26 +29,31 @@ export default function MyCatalog() {
         setSelectedCatalog(null);
     };
 
-    return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <StyledTitle text="Catálogos" color="black" />
+    useEffect(() => {
+        loadData();
+    }, []);
 
-            <View style={styles.cardContainer}>
-                {data.map((item) => (
-                    <TouchableOpacity key={item.id} style={styles.card} onPress={() => openModal(item)}>
-                        <Image source={{}} style={styles.cardImage} />
-                        <Text style={styles.cardTitle}>{item.name}</Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
+    return (
+        <View>
+            <ScrollView contentContainerStyle={styles.container}>
+                <StyledTitle text="Catálogos" color="black" />
+
+                <View style={styles.cardContainer}>
+                    {data.map((item) => (
+                        <TouchableOpacity key={item.id} style={styles.card} onPress={() => openModal(item)}>
+                            <Image source={{}} style={styles.cardImage} />
+                            <Text style={styles.cardTitle}>{item.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
 
             {selectedCatalog && (
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={modalVisible}
-                    onRequestClose={closeModal}
-                >
+                    onRequestClose={closeModal}>
                     <View style={styles.modalContainer}>
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>{selectedCatalog.name}</Text>
@@ -65,7 +66,7 @@ export default function MyCatalog() {
                     </View>
                 </Modal>
             )}
-        </ScrollView>
+        </View>
     )
 }
 
