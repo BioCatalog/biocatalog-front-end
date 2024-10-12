@@ -10,6 +10,7 @@ export interface CatalogProps {
     warning?: string
     cultivation?: string
     plantTime?: string
+    record?: Array<RecordProps>
 }
 
 export interface RecordProps {

@@ -13,7 +13,7 @@ export default function MyCatalog() {
     const catalog = useCatalogDatabase();
 
     async function loadData() {
-        const catalogRes = await catalog.getAll();
+        const catalogRes = await catalog.getWithImages();
         if (catalogRes) {
             setData(catalogRes);
         }
@@ -38,10 +38,10 @@ export default function MyCatalog() {
             <ScrollView contentContainerStyle={styles.container}>
                 <StyledTitle text="Catálogos" color="black" />
 
-                <View style={styles.cardContainer}>
+                <View style={styles.cardContainer}> 
                     {data.map((item) => (
                         <TouchableOpacity key={item.id} style={styles.card} onPress={() => openModal(item)}>
-                            <Image source={{}} style={styles.cardImage} />
+                            {item.record && <Image source={{uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} /> }
                             <Text style={styles.cardTitle}>{item.name}</Text>
                         </TouchableOpacity>
                     ))}
