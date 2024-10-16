@@ -1,9 +1,9 @@
 import { router } from "expo-router";
 import { useState, useEffect } from "react";
 import { StyleSheet, ToastAndroid, View } from "react-native";
-import PhotoBox from "@/components/catalog/add-boxes";
+import PhotoBox from "@/components/catalog-record/add-boxes";
 import StyledButton from "@/components/styled-button";
-import CatalogInputs from "@/components/catalog/inputs";
+import CatalogInputs from "@/components/catalog-record/inputs";
 import { ScrollView } from "react-native";
 import Camera from "./newImage";
 
