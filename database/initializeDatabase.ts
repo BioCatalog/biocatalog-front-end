@@ -1,4 +1,5 @@
 import { type SQLiteDatabase } from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system';
 
 export default async function initializeDatabase(database: SQLiteDatabase) {
     await database.execAsync(`
@@ -39,5 +40,16 @@ export async function refactorDatabase(database: SQLiteDatabase) {
         DROP TABLE catalog;
         `);
 
-        initializeDatabase(database);
+    initializeDatabase(database);
+
+    FileSystem.readDirectoryAsync(FileSystem.documentDirectory!).then((res) => {
+        console.log(res);
+        res.forEach(async (item) => {
+            if (item.endsWith('jpg')) {
+                await FileSystem.deleteAsync(FileSystem.documentDirectory + item);
+            }
+        })
+    }).catch((err) => {
+        console.log(err);
+    });
 }

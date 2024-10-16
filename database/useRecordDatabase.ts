@@ -26,8 +26,6 @@ export function useRecordDatabase() {
             if (insertedRowId) {
                 if (param.imageURL) {
                     param.imageURL.forEach(async (image) => {
-                        console.log(image.imageURL);
-
                         await statementImages.executeAsync({
                             $record: insertedRowId,
                             $imageURL: image.imageURL,

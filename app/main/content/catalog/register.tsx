@@ -32,7 +32,7 @@ export default function RegisterSpecie() {
 
     async function handleCancel() {
         photo.map(async (content) => {
-            const file = await FileSystem.deleteAsync(content);
+            await FileSystem.deleteAsync(content);
         });
 
         router.replace('/main/(tabs)');
@@ -44,7 +44,7 @@ export default function RegisterSpecie() {
 
     useEffect(() => {
         setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
-    }, [photo]);
+    }, [photo, setPhoto]);
 
     return (
         <View style={styles.container}>
