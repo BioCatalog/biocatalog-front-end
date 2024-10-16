@@ -48,7 +48,8 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
         });
     }
 
-    const retakePicture = () => {
+    const retakePicture = async () => {
+        await FileSystem.deleteAsync(tempPhoto); 
         setTempPhoto('');
     }
 
