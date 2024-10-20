@@ -1,14 +1,13 @@
+import { useRouter } from 'expo-router';
+import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
 import StyledTitle from "@/components/styled-title";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
-import { useRecordDatabase } from "@/database/useRecordDatabase";
-import { CatalogProps, RecordImagesProps, RecordProps } from "@/interfaces";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Modal, Button } from "react-native";
+import { CatalogProps } from "@/interfaces";
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
-    const [selectedCatalog, setSelectedCatalog] = useState<CatalogProps | null>(null);
-    const [modalVisible, setModalVisible] = useState(false);
+    const router = useRouter();
 
     const catalog = useCatalogDatabase();
 
@@ -19,14 +18,18 @@ export default function MyCatalog() {
         }
     }
 
-    const openModal = (catalog: CatalogProps) => {
-        setSelectedCatalog(catalog);
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setSelectedCatalog(null);
+    const openCatalogDetails = (catalog: CatalogProps) => {
+        router.push({
+            pathname: '/main/content/catalog',
+            params: {
+                name: catalog.name,
+                lifeTime: catalog.lifeTime,
+                plantTime: catalog.plantTime,
+                cultivation: catalog.cultivation,
+                warning: catalog.warning,
+                records: JSON.stringify(catalog.record), 
+            },
+        });
     };
 
     useEffect(() => {
@@ -38,36 +41,19 @@ export default function MyCatalog() {
             <ScrollView contentContainerStyle={styles.container}>
                 <StyledTitle text="Catálogos" color="black" />
 
-                <View style={styles.cardContainer}> 
+                <View style={styles.cardContainer}>
                     {data.map((item) => (
-                        <TouchableOpacity key={item.id} style={styles.card} onPress={() => openModal(item)}>
-                            {item.record && <Image source={{uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} /> }
+                        <TouchableOpacity key={item.id} style={styles.card} onPress={() => openCatalogDetails(item)}>
+                            {item.record && item.record[0]?.imageURL[0]?.imageURL && (
+                                <Image source={{ uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} />
+                            )}
                             <Text style={styles.cardTitle}>{item.name}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
             </ScrollView>
-
-            {selectedCatalog && (
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={closeModal}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalTitle}>{selectedCatalog.name}</Text>
-                            <Text>Tempo de Vida: {selectedCatalog.lifeTime}</Text>
-                            <Text>Época de Plantio: {selectedCatalog.plantTime}</Text>
-                            <Text>Cultivo: {selectedCatalog.cultivation}</Text>
-                            <Text>Observações: {selectedCatalog.warning}</Text>
-                            <Button color="green" title="Fechar" onPress={closeModal} />
-                        </View>
-                    </View>
-                </Modal>
-            )}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -102,23 +88,5 @@ const styles = StyleSheet.create({
     cardTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        width: 300,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        alignItems: 'center',
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
     },
 });
