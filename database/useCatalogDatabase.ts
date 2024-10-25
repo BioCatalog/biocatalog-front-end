@@ -28,29 +28,18 @@ export function useCatalogDatabase() {
         }
     }
 
-    async function getAll() {
+    async function getAllCatalog() {
         const data: Array<CatalogProps> = await database.getAllAsync('SELECT * FROM catalog');
 
         return data;
     }
 
-    async function getWithImages() {
-        const data: Array<CatalogProps> = await database.getAllAsync(`SELECT * FROM catalog`);
+    async function getAll() {
+        const query = `SELECT * FROM catalog inner join record on catalog.id = record.id 
+                                           inner join recordImages on recordImages.record = catalog.id`
+        const data: Array<{ catalog: CatalogProps, record: RecordProps[], images: RecordImagesProps[] }> = await database.getAllAsync(query);
 
-        for (const item of data) {
-            const itemRecord: RecordProps | null = await database.getFirstAsync(`SELECT * FROM record WHERE catalog = ${item.id}`);
-
-            if (itemRecord) {
-                const images: Array<RecordImagesProps> | null = await database.getAllAsync(`SELECT * FROM recordImages WHERE record = ${item.id}`);
-
-                if (images) {
-                    itemRecord.imageURL = images;
-                }
-
-                item.record = [itemRecord];
-            }
-        }
-
+        console.log(data.map(item => item.catalog));
 
         return data;
     }
@@ -63,5 +52,7 @@ export function useCatalogDatabase() {
         return options;
     }
 
-    return { create, getAll, getAsOption, getWithImages }
+
+
+    return { create, getAllCatalog, getAsOption, getAll }
 }
