@@ -3,7 +3,7 @@ import StyledInput from "@/components/styled-input";
 import { router } from "expo-router";
 import { Image, StyleSheet, View, Text, Alert } from "react-native";
 import { useState } from "react";
-import axios from 'axios'
+import api from "@/helpers/axios";
 
 export default function UserRegister() {
     const [name, setName] = useState('');
@@ -13,10 +13,8 @@ export default function UserRegister() {
 
     async function handleRegister() {
         try {
-            const response = await axios.post('http://localhost:3000/register', {
-                name, form, email, passw,
-            });
-
+            const response = await api.post('/register', { name, form, email, passw });
+            
             if (response.status == 201) {
                 Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
                 router.replace('/main/(tabs)/profile');
