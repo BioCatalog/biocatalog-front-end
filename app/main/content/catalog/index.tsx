@@ -9,26 +9,35 @@ export default function CatalogDetails() {
     const parsedRecords: RecordProps[] = records ? JSON.parse(records as string) : [];
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>{name}</Text>
-            <Text style={styles.text}>Tempo de Vida: {lifeTime}</Text>
-            <Text style={styles.text}>Época de Plantio: {plantTime}</Text>
-            <Text style={styles.text}>Cultivo: {cultivation}</Text>
-            <Text style={styles.text}>Observações: {warning}</Text>
+        <View>
+            <ScrollView contentContainerStyle={styles.container}>
+                <Text style={styles.title}>{name}</Text>
+                <Text style={styles.text}>Tempo de Vida: {lifeTime}</Text>
+                <Text style={styles.text}>Época de Plantio: {plantTime}</Text>
+                <Text style={styles.text}>Cultivo: {cultivation}</Text>
+                <Text style={styles.text}>Observações: {warning}</Text>
 
-            <View style={styles.imageContainer}>
-                {parsedRecords.map((record, index) => (
-                    record.imageURL[0]?.imageURL && (
-                        <Image
-                            key={index}
-                            source={{ uri: record.imageURL[0].imageURL }}
-                            style={styles.image}
-                        />
-                    )
-                ))}
-            </View>
-            <StyledButton text='Voltar' onClick={() => { router.back(); }} />
-        </ScrollView>
+                <View style={styles.imageContainer}>
+                    {parsedRecords.map((record, index) => (
+                        <View style={styles.recordContainer}>
+                            <Text>Registro n°{index}</Text>
+                            <View style={styles.imageContainer}>
+                                {
+                                    record.imageURL.map((image) => (
+                                        <Image
+                                            key={image.imageURL}
+                                            source={{ uri: image.imageURL }}
+                                            style={styles.image}
+                                        />
+                                    ))
+                                }
+                            </View>
+                        </View>
+                    ))}
+                </View>
+                <StyledButton text='Voltar' onClick={() => { router.back(); }} />
+            </ScrollView>
+        </View>
     );
 }
 
@@ -57,4 +66,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 10,
     },
+    recordContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center'
+    }
 });

@@ -35,7 +35,7 @@ export default function CollectionForm() {
                 <StyledInput defaultValue={collection.cultivation} label="Cultivo" type="text-area" placeholder="Digite sobre o cultivo" onChangeText={(value) => { setCollection({ ...collection, cultivation: value }) }} />
                 <StyledInput defaultValue={collection.warning} label="Atenção" type="text-area" placeholder="Digite sobre as precauções e observações" onChangeText={(value) => { setCollection({ ...collection, warning: value }) }} />
                 <View style={style.containerButtons}>
-                    <StyledConfirmation firClick={handleBack} firLabel="Voltar" secClick={handleCreate} secLabel="Criar" />
+                    <StyledConfirmation firClick={handleBack} firLabel="Voltar" firColor="#A41718" secClick={handleCreate} secLabel="Criar" />
                 </View>
             </View>
         </ScrollView >
