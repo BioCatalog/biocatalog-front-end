@@ -9,20 +9,20 @@ export default function UserRegister() {
     const [name, setName] = useState('');
     const [form, setForm] = useState('');
     const [email, setEmail] = useState('');
-    const [passw, setPassw] = useState('');
+    const [password, setPassw] = useState('');
 
     async function handleRegister() {
         try {
-            const response = await api.post('/register', { name, form, email, passw });
+            const response = await api.post('/registrar', { name, form, email, password });
             
             if (response.status == 201) {
                 Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
-                router.replace('/main/(tabs)/profile');
+                router.replace('/');
             } else {
                 Alert.alert('Erro', 'Falha ao registrar usuário.');
             }
         } catch (e) {
-            Alert.alert('Erro', 'Erro ao registrar usuário: ')//+ e.message
+            Alert.alert('Erro', 'Erro ao registrar usuário: ' + e);
         }
 
     }
@@ -47,7 +47,7 @@ export default function UserRegister() {
 
                 <Text style={styles.textRegister}>Senha:</Text>
                 <StyledInput label="Senha" type="password" 
-                defaultValue={passw} onChangeText={setPassw} />
+                defaultValue={password} onChangeText={setPassw} />
 
             </View>
             <StyledButton onClick={handleRegister} text="Registrar" color="#509044" />
