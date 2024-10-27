@@ -24,7 +24,6 @@ export default function UserRegister() {
         } catch (e) {
             Alert.alert('Erro', 'Erro ao registrar usuário: ' + e);
         }
-
     }
 
     return (
