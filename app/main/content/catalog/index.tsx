@@ -44,6 +44,7 @@ export default function CatalogDetails() {
                 {parsedRecords.map((record, index) => (
                     <View key={record.id?.toString()} style={styles.card}>
                         <Text style={styles.cardTitle}>Registro n°{index + 1}</Text>
+                        <Text style={styles.text}>{record.comment}</Text>
                         <View style={styles.imageContainer}>
                             {record.imageURL.map((image) => (
                                 <TouchableOpacity key={image.imageURL}
