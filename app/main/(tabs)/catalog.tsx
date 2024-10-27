@@ -12,7 +12,7 @@ export default function MyCatalog() {
     const catalog = useCatalogDatabase();
 
     async function loadData() {
-        const catalogRes = await catalog.getWithImages();
+        const catalogRes = await catalog.getCatalogImage();
         if (catalogRes) {
             setData(catalogRes);
         }
@@ -27,7 +27,7 @@ export default function MyCatalog() {
                 plantTime: catalog.plantTime,
                 cultivation: catalog.cultivation,
                 warning: catalog.warning,
-                records: JSON.stringify(catalog.record), 
+                records: JSON.stringify(catalog.record),
             },
         });
     };
@@ -39,8 +39,6 @@ export default function MyCatalog() {
     return (
         <View>
             <ScrollView contentContainerStyle={styles.container}>
-                <StyledTitle text="Catálogos" color="black" />
-
                 <View style={styles.cardContainer}>
                     {data.map((item) => (
                         <TouchableOpacity key={item.id} style={styles.card} onPress={() => openCatalogDetails(item)}>

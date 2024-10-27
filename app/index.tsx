@@ -9,7 +9,7 @@ export default function Login() {
         router.replace('/main');
     }
 
-    useCatalogDatabase().getAll();
+    useCatalogDatabase().getCatalogImage();
 
     return (
         <View style={style.container}>

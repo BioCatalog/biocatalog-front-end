@@ -1,4 +1,4 @@
-import { CatalogProps, RecordImagesProps, RecordProps } from '@/interfaces';
+import AllCatalog, { CatalogProps, RecordImagesProps, RecordProps } from '@/interfaces';
 import { useSQLiteContext } from 'expo-sqlite';
 
 export function useCatalogDatabase() {
@@ -34,12 +34,20 @@ export function useCatalogDatabase() {
         return data;
     }
 
-    async function getAll() {
-        const query = `SELECT * FROM catalog inner join record on catalog.id = record.id 
-                                           inner join recordImages on recordImages.record = catalog.id`
-        const data: Array<{ catalog: CatalogProps, record: RecordProps[], images: RecordImagesProps[] }> = await database.getAllAsync(query);
+    async function getCatalogImage() {
+        const data: CatalogProps[] = await database.getAllAsync('SELECT * FROM catalog');
+        
+        if (data) {
+            for (const item of data) {            
+                item.record = await database.getAllAsync(`SELECT * FROM record WHERE catalog = ${item.id}`);
 
-        console.log(data.map(item => item.catalog));
+                if (item.record) {
+                    for (const record of item.record){
+                        record.imageURL = await database.getAllAsync(`SELECT * FROM recordImages WHERE record = ${record.id}`);
+                    }
+                }
+            }
+        }
 
         return data;
     }
@@ -54,5 +62,5 @@ export function useCatalogDatabase() {
 
 
 
-    return { create, getAllCatalog, getAsOption, getAll }
+    return { create, getAllCatalog, getAsOption, getCatalogImage }
 }

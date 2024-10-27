@@ -1,6 +1,7 @@
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { RecordProps } from "@/interfaces";
+import StyledButton from '@/components/styled-button';
 
 export default function CatalogDetails() {
     const { name, lifeTime, plantTime, cultivation, warning, records } = useLocalSearchParams();
@@ -18,7 +19,7 @@ export default function CatalogDetails() {
             <View style={styles.imageContainer}>
                 {parsedRecords.map((record, index) => (
                     record.imageURL[0]?.imageURL && (
-                        <Image 
+                        <Image
                             key={index}
                             source={{ uri: record.imageURL[0].imageURL }}
                             style={styles.image}
@@ -26,6 +27,7 @@ export default function CatalogDetails() {
                     )
                 ))}
             </View>
+            <StyledButton text='Voltar' onClick={() => { router.back(); }} />
         </ScrollView>
     );
 }
