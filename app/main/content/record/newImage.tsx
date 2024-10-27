@@ -12,13 +12,15 @@ interface CameraProps {
 export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps) {
     const [perm, reqPerm] = useCameraPermissions();
     const [tempPhoto, setTempPhoto] = useState('');
+    const [load, setLoad] = useState(false);
 
     const date = new Date();
-    
+
     let camera: CameraView | null;
 
     const takePicture = async () => {
         if (perm) {
+            setLoad(true);
             await camera?.takePictureAsync()
                 .then((res) => {
                     if (res?.uri) {
@@ -27,6 +29,8 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
                 })
                 .catch((e) => {
                     alert(e);
+                }).finally(() => {
+                    setLoad(false);
                 });
 
         } else {
@@ -36,7 +40,7 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
 
     const savePicture = async () => {
         const photoFileName = FileSystem.documentDirectory + `${date.getTime()}.jpg`;
-        
+
         await FileSystem.deleteAsync(photoFileName, { idempotent: true });
 
         await FileSystem.copyAsync({
@@ -48,7 +52,8 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
         });
     }
 
-    const retakePicture = () => {
+    const retakePicture = async () => {
+        await FileSystem.deleteAsync(tempPhoto);
         setTempPhoto('');
     }
 
@@ -72,8 +77,8 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
                         style={styles.camera}>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.button}>
-                                <StyledButton text="Cancelar" color="red" onClick={onCancel} />
-                                <StyledButton text="Tirar foto" onClick={takePicture} />
+                                <StyledButton load={load} text="Cancelar" color="red" onClick={onCancel} />
+                                <StyledButton load={load} text="Tirar foto" onClick={takePicture} />
                             </TouchableOpacity>
                         </View>
                     </CameraView>

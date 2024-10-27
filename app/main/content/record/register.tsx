@@ -1,9 +1,9 @@
 import { router } from "expo-router";
 import { useState, useEffect } from "react";
 import { StyleSheet, ToastAndroid, View } from "react-native";
-import PhotoBox from "@/components/catalog/add-boxes";
+import PhotoBox from "@/components/catalog-record/add-boxes";
 import StyledButton from "@/components/styled-button";
-import CatalogInputs from "@/components/catalog/inputs";
+import CatalogInputs from "@/components/catalog-record/inputs";
 import { ScrollView } from "react-native";
 import Camera from "./newImage";
 
@@ -18,23 +18,29 @@ export default function RegisterSpecie() {
 
     const recordDatabase = useRecordDatabase();
 
-    function handleRegister() {
-        if (record) {
-            recordDatabase.create(record).then(() => {
+    function clearRecord() {
+        setRecord({} as RecordProps);
+    }
+
+    async function handleRegister() {
+        if (record && record.imageURL) {
+            await recordDatabase.create(record).then(() => {
                 ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
                 router.replace('/main/(tabs)/catalog');
             }).catch((e) => {
                 ToastAndroid.showWithGravity('Não foi possível registrar' + e, ToastAndroid.SHORT, ToastAndroid.TOP);
+            }).finally(() => {
+                clearRecord();
             });
-
         }
     }
 
     async function handleCancel() {
         photo.map(async (content) => {
-            const file = await FileSystem.deleteAsync(content);
+            await FileSystem.deleteAsync(content);
         });
 
+        clearRecord();
         router.replace('/main/(tabs)');
     }
 
@@ -44,7 +50,7 @@ export default function RegisterSpecie() {
 
     useEffect(() => {
         setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
-    }, [photo]);
+    }, [photo, setPhoto]);
 
     return (
         <View style={styles.container}>

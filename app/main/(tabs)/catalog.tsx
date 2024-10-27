@@ -1,85 +1,90 @@
+import { useRouter } from 'expo-router';
+import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
 import StyledTitle from "@/components/styled-title";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
-import { useRecordDatabase } from "@/database/useRecordDatabase";
-import { CatalogProps, RecordImagesProps, RecordProps } from "@/interfaces";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import { CatalogProps } from "@/interfaces";
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
-    const [records, setRecords] = useState<RecordProps[]>([]);
-    const [image, setImage] = useState<RecordImagesProps[]>([]);
+    const router = useRouter();
 
     const catalog = useCatalogDatabase();
-    const record = useRecordDatabase();
 
     async function loadData() {
-        const catalogRes = await catalog.getAll();
-        const recordRes = await record.getAll();
-        const recordImageRes = await record.getImages();
-
+        const catalogRes = await catalog.getCatalogImage();
         if (catalogRes) {
             setData(catalogRes);
         }
-
-        if (recordRes) {
-            setRecords(recordRes);
-        }
-
-        if (recordImageRes) {
-            setImage(recordImageRes);
-        }
     }
+
+    const openCatalogDetails = (catalog: CatalogProps) => {
+        router.push({
+            pathname: '/main/content/catalog',
+            params: {
+                name: catalog.name,
+                lifeTime: catalog.lifeTime,
+                plantTime: catalog.plantTime,
+                cultivation: catalog.cultivation,
+                warning: catalog.warning,
+                records: JSON.stringify(catalog.record),
+            },
+        });
+    };
 
     useEffect(() => {
         loadData();
     }, []);
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <View>
-                <StyledTitle text="Catalogos" color="black" />
-                {data.map((item) => (
-                    <View key={item.id}>
-                        <Text>{item.name}</Text>
-                        <Text>{item.lifeTime}</Text>
-                        <Text>{item.plantTime}</Text>
-                        <Text>{item.cultivation}</Text>
-                        <Text>{item.warning}</Text>
-                    </View>
-                ))}
-            </View>
-
-            <View style={{marginTop: 20}}>
-                <StyledTitle text="Evidencias" color="black" />
-                {
-                    records.map((item) => (
-                        <View key={item.id}>
-                            <Text>{item.id}</Text>
-                            <Text>{item.comment}</Text>
-                        </View>
-                    ))
-                }
-            </View>
-
-            <View style={{marginTop: 20}}>
-                <StyledTitle text="Fotos" color="black" />
-                {
-                    image.map((item) => (
-                        <View key={item.id}>
-                            <Text>{item.id}</Text>
-                            <Image height={50} width={50} source={{ uri: item.imageURL }} />
-                        </View>
-                    ))
-                }
-            </View>
-        </ScrollView>
-    )
+        <View>
+            <ScrollView contentContainerStyle={styles.container}>
+                <View style={styles.cardContainer}>
+                    {data.map((item) => (
+                        <TouchableOpacity key={item.id} style={styles.card} onPress={() => openCatalogDetails(item)}>
+                            {item.record && item.record[0]?.imageURL[0]?.imageURL && (
+                                <Image source={{ uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} />
+                            )}
+                            <Text style={styles.cardTitle}>{item.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
+        padding: 20,
         justifyContent: 'center',
-        alignSelf: 'center',
-    }
-})
+    },
+    cardContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+    },
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        margin: 10,
+        width: 150,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    cardImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        marginBottom: 10,
+    },
+    cardTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+});
