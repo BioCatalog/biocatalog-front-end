@@ -1,41 +1,62 @@
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { RecordProps } from "@/interfaces";
-import StyledButton from '@/components/styled-button';
+import { Button, ButtonIcon } from '@/components/ui/button';
+import { ArrowLeftIcon, Icon } from '@/components/ui/icon';
+import { useState } from 'react';
+import ExpandImage from '@/components/expand-image';
 
 export default function CatalogDetails() {
+    const [showImage, setShowImage] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
     const { name, lifeTime, plantTime, cultivation, warning, records } = useLocalSearchParams();
 
     const parsedRecords: RecordProps[] = records ? JSON.parse(records as string) : [];
 
     return (
-        <View>
-            <ScrollView contentContainerStyle={styles.container}>
-                <Text style={styles.title}>{name}</Text>
-                <Text style={styles.text}>Tempo de Vida: {lifeTime}</Text>
-                <Text style={styles.text}>Época de Plantio: {plantTime}</Text>
-                <Text style={styles.text}>Cultivo: {cultivation}</Text>
-                <Text style={styles.text}>Observações: {warning}</Text>
+        <View style={styles.container}>
+            <ExpandImage imageUrl={currentImage} visible={showImage} onClose={() => { setShowImage(false) }} />
+            <Button
+                onPress={() => { router.back(); }}
+                style={{ alignSelf: 'flex-start', backgroundColor: 'transparent', position: 'absolute', zIndex: 1 }}>
+                <ButtonIcon>
+                    <Icon as={ArrowLeftIcon} height={30} color="black" />
+                </ButtonIcon>
+            </Button>
 
-                <View style={styles.imageContainer}>
-                    {parsedRecords.map((record, index) => (
-                        <View style={styles.recordContainer}>
-                            <Text>Registro n°{index}</Text>
-                            <View style={styles.imageContainer}>
-                                {
-                                    record.imageURL.map((image) => (
-                                        <Image
-                                            key={image.imageURL}
-                                            source={{ uri: image.imageURL }}
-                                            style={styles.image}
-                                        />
-                                    ))
-                                }
-                            </View>
-                        </View>
-                    ))}
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                <Text style={styles.title}>{name}</Text>
+                
+                <View style={styles.card}>
+                    <Text style={styles.cardTitle}>Tempo de Vida</Text>
+                    <Text style={styles.text}>{lifeTime}</Text>
+
+                    <Text style={styles.cardTitle}>Época de Plantio</Text>
+                    <Text style={styles.text}>{plantTime}</Text>
+
+                    <Text style={styles.cardTitle}>Cultivo</Text>
+                    <Text style={styles.text}>{cultivation}</Text>
+
+                    <Text style={styles.cardTitle}>Observações</Text>
+                    <Text style={styles.text}>{warning}</Text>
                 </View>
-                <StyledButton text='Voltar' onClick={() => { router.back(); }} />
+
+                {parsedRecords.map((record, index) => (
+                    <View key={record.id?.toString()} style={styles.card}>
+                        <Text style={styles.cardTitle}>Registro n°{index + 1}</Text>
+                        <View style={styles.imageContainer}>
+                            {record.imageURL.map((image) => (
+                                <TouchableOpacity key={image.imageURL}
+                                    onPress={() => {
+                                        setCurrentImage(image.imageURL);
+                                        setShowImage(true);
+                                    }}>
+                                    <Image source={{ uri: image.imageURL }} style={styles.image} />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                ))}
             </ScrollView>
         </View>
     );
@@ -43,13 +64,28 @@ export default function CatalogDetails() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        alignItems: 'center',
+        flex: 1
+    },
+    contentContainer: {
+        alignItems: 'flex-start', 
+        padding: 20, 
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 20,
+    },
+    card: {
+        backgroundColor: '#f8f8f8', 
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 15,
+        width: '100%', 
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     text: {
         fontSize: 16,
@@ -66,9 +102,4 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 10,
     },
-    recordContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignContent: 'center'
-    }
 });
