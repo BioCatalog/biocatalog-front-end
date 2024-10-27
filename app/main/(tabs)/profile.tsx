@@ -1,15 +1,25 @@
+import StyledConfirmation from "@/components/styled-confirmation";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useAuth } from "@/context/auth";
 import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Login() {
-    const data = useAuth();
+    const auth = useAuth();
 
     return (
         <View style={style.container}>
-            <Text>Olá, {data.userInfo.name}</Text>
-            <Button style={{ backgroundColor: '#A41718' }} onPress={() => router.replace('/')}><ButtonText>Sair</ButtonText></Button>
+            <Text>Olá, {auth.userInfo.name}</Text>
+            <View style={{marginTop: 20, width: '75%'}}>
+                {
+                    auth.userInfo.email == 'n/a' ?
+                        <StyledConfirmation
+                            firClick={() => { router.navigate("/userRegister") }} firLabel="Registrar" firColor="green"
+                            secClick={() => { router.navigate("/") }} secLabel="Login" secColor="blue" />
+                        :
+                        <Button style={{ backgroundColor: '#A41718' }} onPress={auth.handleLogout}><ButtonText>Sair</ButtonText></Button>
+                }
+            </View>
         </View>
     )
 }
@@ -17,7 +27,7 @@ export default function Login() {
 const style = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignSelf: 'center',
+        alignItems: 'center',
         flex: 1
     }
 })

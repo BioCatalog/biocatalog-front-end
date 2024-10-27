@@ -1,68 +1,44 @@
 import StyledButton from "@/components/styled-button";
 import StyledInput from "@/components/styled-input";
 import { router } from "expo-router";
-import { Image, StyleSheet, View, Text, Alert } from "react-native";
-import { useState } from "react";
-import api from "@/helpers/axios";
+import { Image, StyleSheet, View, Text } from "react-native";
+import { useAuth } from "@/context/auth";
+import AuthScreen from "@/components/auth-screen";
 
 export default function UserRegister() {
-    const [name, setName] = useState('');
-    const [form, setForm] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassw] = useState('');
-
-    async function handleRegister() {
-        try {
-            const response = await api.post('/registrar', { name, form, email, password });
-            
-            if (response.status == 201) {
-                Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
-                router.replace('/');
-            } else {
-                Alert.alert('Erro', 'Falha ao registrar usuário.');
-            }
-        } catch (e) {
-            Alert.alert('Erro', 'Erro ao registrar usuário: ' + e);
-        }
-    }
+    const auth = useAuth();
 
     return (
-        <View style={styles.container}>
-            <Image style={styles.logoImage} source={require('../assets/logo/logoImage.png')} />
+        <AuthScreen>
             <Text style={styles.textRegister}>Cadastre-se no BioCatalog e comece a registrar os espécimes encontrados.</Text>
             <View style={styles.containerFieds}>
 
                 <Text style={styles.textRegister}>Nome:</Text>
-                <StyledInput label="Nome completo" type="text" 
-                defaultValue={name} onChangeText={setName} />
+                <StyledInput label="Nome completo" type="text"
+                    defaultValue={auth.userRegister.name} onChangeText={(data) => auth.setUserRegister({ ...auth.userRegister, name: data })} />
 
                 <Text style={styles.textRegister}>Formação:</Text>
-                <StyledInput label="Formação" type="text" 
-                defaultValue={form} onChangeText={setForm} />
+                <StyledInput label="Formação" type="text"
+                    defaultValue={auth.userRegister.form} onChangeText={(data) => auth.setUserRegister({ ...auth.userRegister, form: data })} />
 
                 <Text style={styles.textRegister}>E-mail:</Text>
-                <StyledInput label="Email" type="text" 
-                defaultValue={email} onChangeText={setEmail} />
+                <StyledInput label="Email" type="text"
+                    defaultValue={auth.userRegister.email} onChangeText={(data) => auth.setUserRegister({ ...auth.userRegister, email: data })} />
 
                 <Text style={styles.textRegister}>Senha:</Text>
-                <StyledInput label="Senha" type="password" 
-                defaultValue={password} onChangeText={setPassw} />
+                <StyledInput label="Senha" type="password"
+                    defaultValue={auth.userRegister.password} onChangeText={(data) => auth.setUserRegister({ ...auth.userRegister, password: data })} />
 
             </View>
-            <StyledButton onClick={handleRegister} text="Registrar" color="#509044" />
+            <StyledButton onClick={auth.handleRegister} text="Registrar" color="#509044" />
 
             <Text style={{ marginTop: 15 }} onPress={() => { router.replace('/') }}>
                 Já tem uma conta? Faça Login <Text style={{ fontWeight: "bold", color: "green" }}>AQUI!</Text></Text>
-        </View >
+        </AuthScreen>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1
-    },
     containerFieds: {
         width: '100%',
         margin: 20,
@@ -77,4 +53,4 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold"
     }
-})
+});
