@@ -42,8 +42,6 @@ export async function refactorDatabase(database: SQLiteDatabase) {
 
     initializeDatabase(database);
 
-    console.log(FileSystem.readAsStringAsync(FileSystem.documentDirectory!));
-
     FileSystem.readDirectoryAsync(FileSystem.documentDirectory!).then((res) => {
         console.log(res);
         res.forEach(async (item) => {
