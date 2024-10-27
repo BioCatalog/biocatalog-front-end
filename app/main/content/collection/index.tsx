@@ -15,6 +15,7 @@ export default function CollectionForm() {
 
         catalogDatabase.create(collection).then(() => {
             ToastAndroid.showWithGravity('Criado com sucesso!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            setCollection({} as CatalogProps);
         }).catch((error) => {
             ToastAndroid.showWithGravity('Erro ao criar' + error, ToastAndroid.SHORT, ToastAndroid.TOP);
         })
@@ -28,11 +29,11 @@ export default function CollectionForm() {
     return (
         <ScrollView contentContainerStyle={style.container}>
             <View style={style.containerInput}>
-                <StyledInput label="Nome da especie" type="text" placeholder="Digite o nome da especie" onChangeText={(value) => { setCollection({ ...collection, name: value }) }} />
-                <StyledInput label="Tempo de vida" type="text" placeholder="Digite o tempo de vida" onChangeText={(value) => { setCollection({ ...collection, lifeTime: value }) }} />
-                <StyledInput label="Época de plantio" type="text" placeholder="Digite a época de plantio" onChangeText={(value) => { setCollection({ ...collection, plantTime: value }) }} />
-                <StyledInput label="Cultivo" type="text-area" placeholder="Digite sobre o cultivo" onChangeText={(value) => { setCollection({ ...collection, cultivation: value }) }} />
-                <StyledInput label="Atenção" type="text-area" placeholder="Digite sobre as precauções e observações" onChangeText={(value) => { setCollection({ ...collection, warning: value }) }} />
+                <StyledInput defaultValue={collection.name} label="Nome da especie" type="text" placeholder="Digite o nome da especie" onChangeText={(value) => { setCollection({ ...collection, name: value }) }} />
+                <StyledInput defaultValue={collection.lifeTime} label="Tempo de vida" type="text" placeholder="Digite o tempo de vida" onChangeText={(value) => { setCollection({ ...collection, lifeTime: value }) }} />
+                <StyledInput defaultValue={collection.plantTime} label="Época de plantio" type="text" placeholder="Digite a época de plantio" onChangeText={(value) => { setCollection({ ...collection, plantTime: value }) }} />
+                <StyledInput defaultValue={collection.cultivation} label="Cultivo" type="text-area" placeholder="Digite sobre o cultivo" onChangeText={(value) => { setCollection({ ...collection, cultivation: value }) }} />
+                <StyledInput defaultValue={collection.warning} label="Atenção" type="text-area" placeholder="Digite sobre as precauções e observações" onChangeText={(value) => { setCollection({ ...collection, warning: value }) }} />
                 <View style={style.containerButtons}>
                     <StyledConfirmation firClick={handleBack} firLabel="Voltar" secClick={handleCreate} secLabel="Criar" />
                 </View>

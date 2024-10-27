@@ -1,5 +1,6 @@
 import StyledButton from "@/components/styled-button";
 import StyledInput from "@/components/styled-input";
+import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { router } from "expo-router";
 import { Image, StyleSheet, View, Text } from "react-native";
 
@@ -7,6 +8,8 @@ export default function Login() {
     function handleLogin() {
         router.replace('/main');
     }
+
+    useCatalogDatabase().getCatalogImage();
 
     return (
         <View style={style.container}>

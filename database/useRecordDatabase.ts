@@ -49,11 +49,25 @@ export function useRecordDatabase() {
         return data;
     }
 
+    async function getById(id: number) {
+        const data: RecordProps | null = await database.getFirstAsync(`SELECT * FROM record WHERE id = ${id}`);
+
+        if (data) {
+            const images: Array<RecordImagesProps> | null = await database.getAllAsync(`SELECT * FROM recordImages WHERE id =${data.id}`);
+
+            if (images) {
+                data.imageURL = images;
+            }
+        }
+
+        return data;
+    }
+
     async function getImages() {
         const data: Array<RecordImagesProps> = await database.getAllAsync('SELECT * FROM recordImages');
 
         return data;
     }
 
-    return { create, getAll, getImages }
+    return { create, getAll, getImages, getById }
 }
