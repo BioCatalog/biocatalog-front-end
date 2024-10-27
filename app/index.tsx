@@ -1,36 +1,33 @@
+import AuthScreen from "@/components/auth-screen";
 import StyledButton from "@/components/styled-button";
 import StyledInput from "@/components/styled-input";
-import { useCatalogDatabase } from "@/database/useCatalogDatabase";
+import { useAuth } from "@/context/auth";
 import { router } from "expo-router";
-import { Image, StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
 export default function Login() {
-    function handleLogin() {
-        router.replace('/main');
-    }
-
-    useCatalogDatabase().getCatalogImage();
+    const auth = useAuth();
 
     return (
-        <View style={style.container}>
-            <Image style={style.logoImage} source={require('../assets/logo/logoImage.png')} />
+        <AuthScreen>
             <View style={style.containerFieds}>
-                <StyledInput label="Email" type="text" />
-                <StyledInput label="Senha" type="password" />
+                <StyledInput label="Email" type="text" onChangeText={(data) => { auth.setUser({ ...auth.user, email: data }) }} />
+                <StyledInput label="Senha" type="password" onChangeText={(data) => { auth.setUser({ ...auth.user, password: data }) }} />
             </View>
-            <StyledButton onClick={handleLogin} text="Entrar" color="#509044" />
-            <Text style={{marginTop: 15}} onPress={() => { router.replace('/userRegister') }}>
-                Ou Cadastre-se <Text style={{fontWeight: "bold", color: "green"}}>AQUI!</Text></Text>
-        </View >
+            <StyledButton onClick={auth.handleLogin} text="Entrar" color="#509044" />
+            <Text style={{ marginTop: 15 }} onPress={() => { router.replace('/userRegister') }}>
+                Cadastre-se <Text style={{ fontWeight: "bold", color: "green" }}>AQUI!</Text>
+            </Text>
+            <View style={{ marginTop: 40 }}>
+                <Text onPress={() => { router.replace('/main/(tabs)/'); auth.handleLogin(true); }}>
+                    Ou continuar sem conta
+                </Text>
+            </View>
+        </AuthScreen>
     )
 }
 
 const style = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flex: 1
-    },
     containerFieds: {
         width: '100%',
         margin: 20,

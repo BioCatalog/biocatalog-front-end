@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useState, useEffect } from 'react';
-import StyledTitle from "@/components/styled-title";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { CatalogProps } from "@/interfaces";
 

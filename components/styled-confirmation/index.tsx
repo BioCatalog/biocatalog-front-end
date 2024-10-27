@@ -6,13 +6,15 @@ interface ConfirmationProps {
     secClick: () => void
     firLabel: string
     secLabel: string
+    firColor?: string
+    secColor?: string
 }
 
-export default function StyledConfirmation({ firClick, secClick, firLabel, secLabel }: ConfirmationProps) {
+export default function StyledConfirmation({ firClick, secClick, firColor, firLabel, secLabel, secColor }: ConfirmationProps) {
     return (
         <View style={styles.optionsView}>
-            <StyledButton text={firLabel} color="red" onClick={firClick} />
-            <StyledButton text={secLabel} color="green" onClick={secClick} />
+            <StyledButton text={firLabel} color={firColor ?? "red"} onClick={firClick} />
+            <StyledButton text={secLabel} color={secColor ?? "green"} onClick={secClick} />
         </View>
     )
 }
