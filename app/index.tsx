@@ -2,7 +2,7 @@ import StyledButton from "@/components/styled-button";
 import StyledInput from "@/components/styled-input";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { router } from "expo-router";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Text } from "react-native";
 
 export default function Login() {
     function handleLogin() {
@@ -19,6 +19,8 @@ export default function Login() {
                 <StyledInput label="Senha" type="password" />
             </View>
             <StyledButton onClick={handleLogin} text="Entrar" color="#509044" />
+            <Text style={{marginTop: 15}} onPress={() => { router.replace('/userRegister') }}>
+                Ou Cadastre-se <Text style={{fontWeight: "bold", color: "green"}}>AQUI!</Text></Text>
         </View >
     )
 }

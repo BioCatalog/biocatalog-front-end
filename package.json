@@ -30,6 +30,7 @@
     "@gluestack-ui/toast": "^1.0.7",
     "@legendapp/motion": "^2.4.0",
     "@react-navigation/native": "^6.0.2",
+    "axios": "^1.7.7",
     "babel-plugin-module-resolver": "^5.0.2",
     "expo": "~51.0.37",
     "expo-camera": "~15.0.16",
