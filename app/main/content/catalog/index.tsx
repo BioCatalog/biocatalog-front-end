@@ -14,50 +14,51 @@ export default function CatalogDetails() {
     const parsedRecords: RecordProps[] = records ? JSON.parse(records as string) : [];
 
     return (
-        <View style={styles.container} >
+        <View style={styles.container}>
             <ExpandImage imageUrl={currentImage} visible={showImage} onClose={() => { setShowImage(false) }} />
             <Button
                 onPress={() => { router.back(); }}
                 style={{ alignSelf: 'flex-start', backgroundColor: 'transparent', position: 'absolute', zIndex: 1 }}>
                 <ButtonIcon>
-                    <Icon as={ArrowLeftIcon}
-                        height={30}
-                        color="black" />
+                    <Icon as={ArrowLeftIcon} height={30} color="black" />
                 </ButtonIcon>
             </Button>
 
             <ScrollView contentContainerStyle={styles.contentContainer}>
                 <Text style={styles.title}>{name}</Text>
-                <Text style={styles.text}>Tempo de Vida: {lifeTime}</Text>
-                <Text style={styles.text}>Época de Plantio: {plantTime}</Text>
-                <Text style={styles.text}>Cultivo: {cultivation}</Text>
-                <Text style={styles.text}>Observações: {warning}</Text>
+                
+                <View style={styles.card}>
+                    <Text style={styles.cardTitle}>Tempo de Vida</Text>
+                    <Text style={styles.text}>{lifeTime}</Text>
 
-                <View>
-                    {parsedRecords.map((record, index) => (
-                        <View key={record.id?.toString()}>
-                            <Text>Registro n°{index + 1}</Text>
-                            <View style={styles.imageContainer}>
-                                {
-                                    record.imageURL.map((image) => (
-                                        <TouchableOpacity key={image.imageURL}
-                                            onPress={() => {
-                                                setCurrentImage(image.imageURL);
-                                                setShowImage(true);
-                                            }}>
-                                            <Image
-                                                source={{ uri: image.imageURL }}
-                                                style={styles.image}
-                                            />
-                                        </TouchableOpacity>
-                                    ))
-                                }
-                            </View>
-                        </View>
-                    ))}
+                    <Text style={styles.cardTitle}>Época de Plantio</Text>
+                    <Text style={styles.text}>{plantTime}</Text>
+
+                    <Text style={styles.cardTitle}>Cultivo</Text>
+                    <Text style={styles.text}>{cultivation}</Text>
+
+                    <Text style={styles.cardTitle}>Observações</Text>
+                    <Text style={styles.text}>{warning}</Text>
                 </View>
+
+                {parsedRecords.map((record, index) => (
+                    <View key={record.id?.toString()} style={styles.card}>
+                        <Text style={styles.cardTitle}>Registro n°{index + 1}</Text>
+                        <View style={styles.imageContainer}>
+                            {record.imageURL.map((image) => (
+                                <TouchableOpacity key={image.imageURL}
+                                    onPress={() => {
+                                        setCurrentImage(image.imageURL);
+                                        setShowImage(true);
+                                    }}>
+                                    <Image source={{ uri: image.imageURL }} style={styles.image} />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                ))}
             </ScrollView>
-        </View >
+        </View>
     );
 }
 
@@ -66,12 +67,25 @@ const styles = StyleSheet.create({
         flex: 1
     },
     contentContainer: {
-        alignItems: 'center',
+        alignItems: 'flex-start', 
+        padding: 20, 
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 20,
+    },
+    card: {
+        backgroundColor: '#f8f8f8', 
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 15,
+        width: '100%', 
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     text: {
         fontSize: 16,
