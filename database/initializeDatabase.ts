@@ -14,7 +14,8 @@ export default async function initializeDatabase(database: SQLiteDatabase) {
                 consumption TEXT,
                 warning TEXT,
                 cultivation TEXT,
-                plantTime TEXT
+                plantTime TEXT,
+                user TEXT
             );
             CREATE TABLE IF NOT EXISTS record (
                 id INTEGER PRIMARY KEY NOT NULL,
@@ -40,8 +41,6 @@ export async function refactorDatabase(database: SQLiteDatabase) {
         DROP TABLE catalog;
         `);
 
-    initializeDatabase(database);
-
     FileSystem.readDirectoryAsync(FileSystem.documentDirectory!).then((res) => {
         console.log(res);
         res.forEach(async (item) => {
@@ -52,4 +51,6 @@ export async function refactorDatabase(database: SQLiteDatabase) {
     }).catch((err) => {
         console.log(err);
     });
+
+    initializeDatabase(database);
 }

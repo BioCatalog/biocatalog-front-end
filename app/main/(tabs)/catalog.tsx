@@ -4,15 +4,16 @@ import { useState, useEffect } from 'react';
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { CatalogProps } from "@/interfaces";
 import StyledTitle from '@/components/styled-title';
+import { useAuth } from '@/context/auth';
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
+    const auth = useAuth();
     const router = useRouter();
-
     const catalog = useCatalogDatabase();
 
     async function loadData() {
-        const catalogRes = await catalog.getCatalogImage();
+        const catalogRes = await catalog.getCatalogImage(auth.userInfo.email);
         if (catalogRes) {
             setData(catalogRes);
         }
