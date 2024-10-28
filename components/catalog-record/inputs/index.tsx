@@ -13,8 +13,7 @@ interface CatalogInputsProps {
 }
 
 export default function CatalogInputs({ record, setRecord }: CatalogInputsProps) {
-    const date = new Date();
-
+    const [date] = useState(new Date().toLocaleString());
     const [location, setLocation] = useState<Location.LocationObject | null>();
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -28,23 +27,28 @@ export default function CatalogInputs({ record, setRecord }: CatalogInputsProps)
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+
+            const local = `{"coords": {"accuracy": ${location.coords.accuracy}, "altitude": ${location.coords.altitude}, "altitudeAccuracy": ${location.coords.altitudeAccuracy},
+            "heading": ${location.coords.heading}, "latitude": ${location.coords.latitude}, "longitude": ${location.coords.longitude}, "speed": ${location.coords.speed}},
+            "mocked": ${location.mocked}, "timestamp": ${location.timestamp}}`;
+
+            setRecord({ ...record, local, createDate: date });
         })();
     }, []);
 
     function handleChangeOption(value: string) {
-        setRecord({...record, catalog: value});
+        setRecord({ ...record, catalog: value });
     }
 
     return (
         <View style={styles.container}>
             <SelectOptionsSpecies onChange={handleChangeOption} />
-            <StyledInput placeholder="Faça um comentário" type="text-area" label="Comentário" onChangeText={(value) => {setRecord({...record, comment: value})}} />
-            <StyledInput 
-            onChangeText={(value) => {setRecord({...record, createDate: value})}}
-            isRead={true} 
-            defaultValue={`${date.toLocaleDateString('pt-BR')} | ${date.toLocaleTimeString('pt-BR')}`} 
-            type="text" 
-            label="Data e hora" />
+            <StyledInput placeholder="Faça um comentário" type="text-area" label="Comentário" onChangeText={(value) => { setRecord({ ...record, comment: value }) }} />
+            <StyledInput
+                isRead={true}
+                defaultValue={date}
+                type="text"
+                label="Data e hora" />
             {
                 location &&
                 <CurrentMaps location={location} />

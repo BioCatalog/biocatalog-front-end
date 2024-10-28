@@ -8,7 +8,7 @@ interface StyledTitleProps {
 
 export default function StyledTitle({ text, color }: StyledTitleProps) {
     return (
-        <Text selectionColor='white' size="2xl" style={{color: color ?? 'white'}}>
+        <Text selectionColor='white' size="2xl" style={[{color: color ?? 'white'}, style.title]}>
             {text}
         </Text>
     )

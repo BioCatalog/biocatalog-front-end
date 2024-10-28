@@ -5,6 +5,9 @@ import { Button, ButtonIcon } from '@/components/ui/button';
 import { ArrowLeftIcon, Icon } from '@/components/ui/icon';
 import { useState } from 'react';
 import ExpandImage from '@/components/expand-image';
+import StyledTitle from '@/components/styled-title';
+import CurrentMaps from '@/components/catalog-record/maps';
+import { LocationObject } from 'expo-location';
 
 export default function CatalogDetails() {
     const [showImage, setShowImage] = useState(false);
@@ -20,31 +23,34 @@ export default function CatalogDetails() {
                 onPress={() => { router.back(); }}
                 style={{ alignSelf: 'flex-start', backgroundColor: 'transparent', position: 'absolute', zIndex: 1 }}>
                 <ButtonIcon>
-                    <Icon as={ArrowLeftIcon} height={30} color="black" />
+                    <Icon as={ArrowLeftIcon} size='lg' color="black" />
                 </ButtonIcon>
             </Button>
 
             <ScrollView contentContainerStyle={styles.contentContainer}>
                 <Text style={styles.title}>{name}</Text>
-                
-                <View style={styles.card}>
-                    <Text style={styles.cardTitle}>Tempo de Vida</Text>
+
+                <View className='bg-green-200' style={styles.card}>
+                    <Text style={styles.subtitle}>Tempo de Vida</Text>
                     <Text style={styles.text}>{lifeTime}</Text>
 
-                    <Text style={styles.cardTitle}>Época de Plantio</Text>
+                    <Text style={styles.subtitle}>Época de Plantio</Text>
                     <Text style={styles.text}>{plantTime}</Text>
 
-                    <Text style={styles.cardTitle}>Cultivo</Text>
+                    <Text style={styles.subtitle}>Cultivo</Text>
                     <Text style={styles.text}>{cultivation}</Text>
 
-                    <Text style={styles.cardTitle}>Observações</Text>
+                    <Text style={styles.subtitle}>Observações</Text>
                     <Text style={styles.text}>{warning}</Text>
                 </View>
 
                 {parsedRecords.map((record, index) => (
-                    <View key={record.id?.toString()} style={styles.card}>
-                        <Text style={styles.cardTitle}>Registro n°{index + 1}</Text>
+                    <View key={record.id?.toString()} style={styles.card} className='bg-stone-300'>
+                        <StyledTitle text={"Registro " + (index + 1).toString()} color='black' />
+                        <Text style={styles.text}>{record.createDate}</Text>
+                        <Text style={styles.subtitle}>Comentário</Text>
                         <Text style={styles.text}>{record.comment}</Text>
+                        <CurrentMaps location={JSON.parse(record.local!) as LocationObject} />
                         <View style={styles.imageContainer}>
                             {record.imageURL.map((image) => (
                                 <TouchableOpacity key={image.imageURL}
@@ -65,11 +71,12 @@ export default function CatalogDetails() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     contentContainer: {
-        alignItems: 'flex-start', 
-        padding: 20, 
+        alignItems: 'flex-start',
+        padding: 20,
+        marginTop: 10
     },
     title: {
         fontSize: 22,
@@ -77,14 +84,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     card: {
-        backgroundColor: '#f8f8f8', 
         padding: 15,
         borderRadius: 10,
         marginBottom: 15,
-        width: '100%', 
+        width: '100%',
     },
-    cardTitle: {
-        fontSize: 18,
+    subtitle: {
+        fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 5,
     },
