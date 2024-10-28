@@ -1,6 +1,7 @@
 import StyledInput from "@/components/styled-input";
 import { ButtonIcon, Button } from "@/components/ui/button";
 import { AddIcon, Icon } from "@/components/ui/icon";
+import { useAuth } from "@/context/auth";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
@@ -14,9 +15,10 @@ interface SOSpeciesProps {
 export default function SelectOptionsSpecies({ onChange }: SOSpeciesProps) {
     const [options, setOptions] = useState<Array<{ name: string, id: string }>>([]);
     const catalog = useCatalogDatabase();
+    const auth = useAuth();
 
     async function loadOptions() {
-        const opt = await catalog.getAsOption();
+        const opt = await catalog.getAsOption(auth.userInfo.email);
 
         if (opt) {
             setOptions(opt);

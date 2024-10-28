@@ -12,7 +12,7 @@ export default function Login() {
             <Text>Olá, {auth.userInfo.name}</Text>
             <View style={{marginTop: 20, width: '75%'}}>
                 {
-                    auth.userInfo.email == 'n/a' ?
+                    auth.userInfo.email == 'local' ?
                         <StyledConfirmation
                             firClick={() => { router.navigate("/userRegister") }} firLabel="Registrar" firColor="green"
                             secClick={() => { router.navigate("/") }} secLabel="Login" secColor="blue" />

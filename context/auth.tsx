@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     const handleLogin = async (wAccount?: boolean) => {
         if (wAccount == true) {
-            setData({ ...data, email: 'n/a', name: 'n/a', form: 'n/a' });
+            setData({ ...data, email: 'local', name: 'local', form: 'local' });
             setIsLogged(true);
             router.replace('/main/(tabs)/');
             return;
@@ -96,7 +96,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
 
     const handleLogout = async () => {
-        if (data.email != 'n/a') {
+        if (data.email != 'local') {
             await api.post('/logout', { email: data.email })
                 .then((res) => {
                     if (res.status == 200) {
