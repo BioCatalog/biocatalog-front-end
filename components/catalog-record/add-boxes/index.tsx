@@ -36,7 +36,7 @@ export default function PhotoBox({ photosURL, onAdd, setPhotos }: PhotoBoxProps)
                 photosURL && photosURL.map((photoUrl, index) => (
                     <View key={index} style={style.box}>
                         <Button
-                            onTouchEnd={() => { erasePhoto(photoUrl) }}
+                            onPress={() => { erasePhoto(photoUrl) }}
                             style={{ zIndex: 1, alignSelf: 'flex-end', borderRadius: 5, aspectRatio: 1, backgroundColor: 'red', position: 'absolute' }}>
                             <ButtonIcon>
                                 <Icon as={TrashIcon}

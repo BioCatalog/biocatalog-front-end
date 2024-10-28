@@ -3,15 +3,17 @@ import { ScrollView, View, Text, TouchableOpacity, Image, StyleSheet } from 'rea
 import { useState, useEffect } from 'react';
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { CatalogProps } from "@/interfaces";
+import StyledTitle from '@/components/styled-title';
+import { useAuth } from '@/context/auth';
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
+    const auth = useAuth();
     const router = useRouter();
-
     const catalog = useCatalogDatabase();
 
     async function loadData() {
-        const catalogRes = await catalog.getCatalogImage();
+        const catalogRes = await catalog.getCatalogImage(auth.userInfo.email);
         if (catalogRes) {
             setData(catalogRes);
         }
@@ -39,14 +41,21 @@ export default function MyCatalog() {
         <View>
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.cardContainer}>
-                    {data.map((item) => (
-                        <TouchableOpacity key={item.id} style={styles.card} onPress={() => openCatalogDetails(item)}>
-                            {item.record && item.record[0]?.imageURL[0]?.imageURL && (
-                                <Image source={{ uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} />
-                            )}
-                            <Text style={styles.cardTitle}>{item.name}</Text>
-                        </TouchableOpacity>
-                    ))}
+                    {
+                        data.length > 0 ?
+                            data.map((item) => (
+                                <TouchableOpacity key={item.id} style={styles.card} onPress={() => openCatalogDetails(item)}>
+                                    {item.record && item.record[0]?.imageURL[0]?.imageURL && (
+                                        <Image source={{ uri: item.record[0].imageURL[0].imageURL }} style={styles.cardImage} />
+                                    )}
+                                    <Text style={styles.cardTitle}>{item.name}</Text>
+                                </TouchableOpacity>
+                            ))
+
+                            :
+
+                            <StyledTitle text='Não há catálogos registrados' color='black' />
+                    }
                 </View>
             </ScrollView>
         </View>

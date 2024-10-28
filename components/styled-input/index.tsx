@@ -59,7 +59,7 @@ export default function StyledInput({ label, helper, placeholder, type, options,
                             :
 
                             <Textarea size="md">
-                                <TextareaInput onChangeText={onChangeText} placeholder={placeholder} />
+                                <TextareaInput defaultValue={defaultValue} onChangeText={onChangeText} placeholder={placeholder} />
                             </Textarea>
                 }
             </StyledFormControl>

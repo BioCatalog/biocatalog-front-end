@@ -1,5 +1,6 @@
 import StyledConfirmation from "@/components/styled-confirmation";
 import StyledInput from "@/components/styled-input";
+import { useAuth } from "@/context/auth";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { CatalogProps } from "@/interfaces";
 import { router } from "expo-router";
@@ -9,15 +10,17 @@ import { StyleSheet, ScrollView, View, ToastAndroid } from "react-native";
 export default function CollectionForm() {
     const [collection, setCollection] = useState<CatalogProps>({} as CatalogProps);
     const catalogDatabase = useCatalogDatabase();
+    const auth = useAuth();
 
     function handleCreate() {
         if (!collection.name) return ToastAndroid.showWithGravity('Preencha os campos obrigatórios', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        catalogDatabase.create(collection).then(() => {
+        catalogDatabase.create(collection, auth.userInfo.email).then(() => {
             ToastAndroid.showWithGravity('Criado com sucesso!', ToastAndroid.SHORT, ToastAndroid.TOP);
             setCollection({} as CatalogProps);
         }).catch((error) => {
-            ToastAndroid.showWithGravity('Erro ao criar' + error, ToastAndroid.SHORT, ToastAndroid.TOP);
+            ToastAndroid.showWithGravity('Erro ao criar', ToastAndroid.SHORT, ToastAndroid.TOP);
+            console.log(error);
         })
     }
 
@@ -35,7 +38,7 @@ export default function CollectionForm() {
                 <StyledInput defaultValue={collection.cultivation} label="Cultivo" type="text-area" placeholder="Digite sobre o cultivo" onChangeText={(value) => { setCollection({ ...collection, cultivation: value }) }} />
                 <StyledInput defaultValue={collection.warning} label="Atenção" type="text-area" placeholder="Digite sobre as precauções e observações" onChangeText={(value) => { setCollection({ ...collection, warning: value }) }} />
                 <View style={style.containerButtons}>
-                    <StyledConfirmation firClick={handleBack} firLabel="Voltar" secClick={handleCreate} secLabel="Criar" />
+                    <StyledConfirmation firClick={handleBack} firLabel="Voltar" firColor="#A41718" secClick={handleCreate} secLabel="Criar" />
                 </View>
             </View>
         </ScrollView >

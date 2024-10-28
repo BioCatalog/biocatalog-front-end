@@ -4,9 +4,9 @@ import { useSQLiteContext } from 'expo-sqlite';
 export function useCatalogDatabase() {
     const database = useSQLiteContext();
 
-    async function create(param: Omit<CatalogProps, "id">) {
+    async function create(param: Omit<CatalogProps, "id">, user: string) {
         const statement = await database.prepareAsync(
-            'INSERT INTO catalog (name, lifeTime, plantTime, cultivation, warning) VALUES ($name, $lifeTime, $plantTime, $cultivation, $warning)'
+            'INSERT INTO catalog (name, lifeTime, plantTime, cultivation, warning, user) VALUES ($name, $lifeTime, $plantTime, $cultivation, $warning, $user)'
         );
 
         try {
@@ -15,7 +15,8 @@ export function useCatalogDatabase() {
                 $lifeTime: param.lifeTime,
                 $plantTime: param.plantTime,
                 $cultivation: param.cultivation,
-                $warning: param.warning
+                $warning: param.warning,
+                $user: user
             });
 
             const insertedRowId = result.lastInsertRowId.toLocaleString();
@@ -34,8 +35,8 @@ export function useCatalogDatabase() {
         return data;
     }
 
-    async function getCatalogImage() {
-        const data: CatalogProps[] = await database.getAllAsync('SELECT * FROM catalog');
+    async function getCatalogImage(user: string) {
+        const data: CatalogProps[] = await database.getAllAsync(`SELECT * FROM catalog WHERE user = "${user}"`);
         
         if (data) {
             for (const item of data) {            
@@ -52,8 +53,8 @@ export function useCatalogDatabase() {
         return data;
     }
 
-    async function getAsOption() {
-        const data: Array<CatalogProps> = await database.getAllAsync('SELECT * FROM catalog');
+    async function getAsOption(user: string) {
+        const data: Array<CatalogProps> = await database.getAllAsync(`SELECT * FROM catalog WHERE user = "${user}"`);
 
         const options = data.map((item) => ({ name: item.name, id: item.id }));
 

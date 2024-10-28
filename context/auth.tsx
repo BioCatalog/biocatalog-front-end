@@ -57,19 +57,17 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                 }
             })
             .catch((e) => {
-                const body: string = e.response.data.error;
-
-                if (e.status == 401) {
-                    Alert.alert('Erro', body);
+                if (!e.status) {
+                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
                 } else {
-                    Alert.alert('Erro', 'Erro ao registrar usuário: ' + e);
+                    ToastAndroid.showWithGravity(e.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
                 }
             });
     }
 
     const handleLogin = async (wAccount?: boolean) => {
         if (wAccount == true) {
-            setData({ ...data, email: 'n/a', name: 'n/a', form: 'n/a' });
+            setData({ ...data, email: 'local', name: 'local', form: 'local' });
             setIsLogged(true);
             router.replace('/main/(tabs)/');
             return;
@@ -89,12 +87,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                 router.replace('/main/(tabs)/');
             })
             .catch((err) => {
-                ToastAndroid.showWithGravity('Erro ao tentar fazer login' + err, ToastAndroid.SHORT, ToastAndroid.TOP);
+                if (err.status) {
+                    ToastAndroid.showWithGravity(err.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+                } else {
+                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
             });
     }
 
     const handleLogout = async () => {
-        if (data.email != 'n/a') {
+        if (data.email != 'local') {
             await api.post('/logout', { email: data.email })
                 .then((res) => {
                     if (res.status == 200) {
