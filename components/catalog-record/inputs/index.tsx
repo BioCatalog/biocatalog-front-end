@@ -60,5 +60,7 @@ export default function CatalogInputs({ record, setRecord }: CatalogInputsProps)
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        rowGap: 15,
+        marginBottom: 30
     }
 });
