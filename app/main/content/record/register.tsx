@@ -15,7 +15,6 @@ export default function RegisterSpecie() {
     const [record, setRecord] = useState<RecordProps>({} as RecordProps);
     const [photo, setPhoto] = useState<string[]>([]);
     const [cameraVisible, setCameraVisible] = useState(false);
-
     const recordDatabase = useRecordDatabase();
 
     function clearRecord() {
@@ -23,7 +22,7 @@ export default function RegisterSpecie() {
     }
 
     async function handleRegister() {
-        if (record && record.imageURL) {
+        if (record && record.imageURL.length && record.comment && record.catalog) {
             await recordDatabase.create(record).then(() => {
                 ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
                 router.replace('/main/(tabs)/catalog');
@@ -32,6 +31,8 @@ export default function RegisterSpecie() {
             }).finally(() => {
                 clearRecord();
             });
+        } else {
+            ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -49,7 +50,7 @@ export default function RegisterSpecie() {
     }
 
     useEffect(() => {
-        setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
+        setRecord({ ...record, imageURL: photo.map((item) => ({ imageURL: item })) });
     }, [photo, setPhoto]);
 
     return (

@@ -9,7 +9,7 @@ import { useEffect } from "react";
 export default function Layout() {
     const auth = useAuth();
 
-    useEffect(() => { if(auth.isLogged) return router.replace('/main/(tabs)/'); }, []);
+    useEffect(() => { if (auth.isLogged) return router.replace('/main/(tabs)/'); }, []);
 
     return (
         <GluestackUIProvider>
