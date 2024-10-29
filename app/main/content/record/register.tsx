@@ -10,6 +10,7 @@ import Camera from "./newImage";
 import * as FileSystem from 'expo-file-system'
 import { RecordProps } from "@/interfaces";
 import { useRecordDatabase } from "@/database/useRecordDatabase";
+import StyledConfirmation from "@/components/styled-confirmation";
 
 export default function RegisterSpecie() {
     const [record, setRecord] = useState<RecordProps>({} as RecordProps);
@@ -22,7 +23,7 @@ export default function RegisterSpecie() {
     }
 
     async function handleRegister() {
-        if (record && record.imageURL.length && record.comment && record.catalog) {
+        if (record && record.imageURL && record.imageURL.length && record.comment && record.catalog) {
             await recordDatabase.create(record).then(() => {
                 ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
                 router.replace('/main/(tabs)/catalog');
@@ -63,8 +64,7 @@ export default function RegisterSpecie() {
             </ScrollView>
 
             <View style={styles.optionsView}>
-                <StyledButton text="Cancelar" color="red" onClick={handleCancel} />
-                <StyledButton text="Registrar" color="green" onClick={handleRegister} />
+                <StyledConfirmation firClick={handleCancel} firLabel="Cancelar" secClick={handleRegister} secLabel="Registrar" />
             </View>
 
         </View>
@@ -81,13 +81,7 @@ const styles = StyleSheet.create({
     },
 
     optionsView: {
-        position: 'absolute',
         bottom: 20,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
     },
 
     scrollView: {
