@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
     },
 
     optionsView: {
+        position: 'absolute',
+        width: '100%',
         bottom: 20,
     },
 
