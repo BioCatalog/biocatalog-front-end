@@ -10,6 +10,7 @@ interface StyledInputProps {
     label?: string
     placeholder?: string
     onChangeText?: (text: string) => void
+    onClick?: () => void
     type: 'text' | 'password' | 'select-options' | 'text-area'
     options?: Array<{ name: string, id: string }>
     defaultValue?: string
@@ -17,7 +18,7 @@ interface StyledInputProps {
     helper?: string
 }
 
-export default function StyledInput({ label, helper, placeholder, type, options, onChangeText, defaultValue, isRead }: StyledInputProps) {
+export default function StyledInput({ label, helper, placeholder, type, options, onChangeText, onClick, defaultValue, isRead }: StyledInputProps) {
     return (
         <VStack space="xs">
             <StyledFormControl label={label} helper={helper}>
@@ -35,7 +36,7 @@ export default function StyledInput({ label, helper, placeholder, type, options,
                         :
 
                         type == 'select-options' ?
-                            <Select onValueChange={onChangeText}>
+                            <Select onValueChange={onChangeText} onOpen={onClick}>
                                 <SelectTrigger variant="outline" size="md" style={{ justifyContent: 'space-between' }}>
                                     <SelectInput placeholder={placeholder} />
                                     <SelectIcon className="mr-3" as={ChevronDownIcon} />
