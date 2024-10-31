@@ -13,7 +13,7 @@ export default function handleEdit() {
                 <StyledInput label="Nome" type="text" defaultValue={auth.userInfo.name}/>
                 <StyledInput label="Formação" type="text" defaultValue={auth.userInfo.form}/>
 
-                <Button onPress={}><ButtonText>Salvar</ButtonText></Button>
+                <Button ><ButtonText>Salvar</ButtonText></Button>
             </ScrollView>
         </View>
     )

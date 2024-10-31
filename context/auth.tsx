@@ -114,6 +114,30 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         }
     }
 
+    async function handleUpdate() {
+        if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
+            return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
+        await api.post('/registrar',
+            { name: userRegister.name, form: userRegister.form, email: userRegister.email, password: userRegister.password })
+            .then((res) => {
+                if (res.status == 201) {
+                    Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
+                    router.replace('/');
+                    setUserRegister({} as IUserRegister);
+                } else {
+                    Alert.alert('Erro', 'Falha ao registrar usuário.');
+                }
+            })
+            .catch((e) => {
+                if (!e.status) {
+                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
+                } else {
+                    ToastAndroid.showWithGravity(e.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+            });
+    }
+
     return (
         <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, userInfo: data, isLogged }}>
             {children}
