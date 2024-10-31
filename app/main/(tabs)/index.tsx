@@ -1,11 +1,13 @@
 import StyledTitle from "@/components/styled-title";
 import { Divider } from "@/components/ui/divider";
 import { Text } from "@/components/ui/text";
-import { StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView, Image } from "react-native";
 
 export default function Login() {
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Image className="my-10" style={{ height: '15%', aspectRatio: 1 }} source={require('../../../assets/logo/logoImage.png')} />
+
             <StyledTitle className="mb-4" text="Bem-vindo ao BioCatalog" color="black" />
             <Text style={styles.description}>
                 Descubra e registre a rica diversidade das Plantas Alimentícias Não Convencionais (PANCs) de forma fácil e intuitiva.
@@ -22,9 +24,11 @@ export default function Login() {
             <Text style={styles.feature}>
                 - **Adicionar Informações Detalhadas**: Compartilhe conhecimentos sobre cada espécie, como nome popular, características, usos, cultivo e outros.
             </Text>
+
             <Text style={styles.feature}>
                 - **Registrar Espécies**: Capture fotos das PANCs, registrando sua localização exata e detalhando a descoberta.
             </Text>
+
             <Text style={styles.feature}>
                 - **Contribuir para a Conservação**: Ajude a aumentar a consciência sobre a importância das PANCs e incentive práticas sustentáveis.
             </Text>
@@ -67,5 +71,5 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 20,
         textAlign: 'center',
-    }
+    },
 })
