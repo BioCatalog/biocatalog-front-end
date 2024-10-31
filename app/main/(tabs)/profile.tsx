@@ -9,7 +9,14 @@ export default function Login() {
 
     return (
         <View style={style.container}>
-            <Text>Olá, {auth.userInfo.name}</Text>
+            <View style={style.profileFrame}>
+                <View style={style.profilePhoto}><Text>Foto de perfil</Text></View>
+            </View>
+            <Text style={style.title}>Olá, {auth.userInfo.name}</Text>
+            <Text style={style.present1}>Formação:</Text>
+            <Text style={style.present2}>{auth.userInfo.form}</Text>
+            <Text style={style.present1}>E-mail:</Text>
+            <Text style={style.present2}>{auth.userInfo.email}</Text>
             <View style={{marginTop: 20, width: '75%'}}>
                 {
                     auth.userInfo.email == 'local' ?
@@ -17,7 +24,10 @@ export default function Login() {
                             firClick={() => { router.navigate("/userRegister") }} firLabel="Registrar" firColor="green"
                             secClick={() => { router.navigate("/") }} secLabel="Login" secColor="blue" />
                         :
+                        <>
+                        <Button style={{ backgroundColor: '#297d28' }} onPress={() => { router.replace('/main/content/editProfile') }}><ButtonText>Editar</ButtonText></Button>
                         <Button style={{ backgroundColor: '#A41718' }} onPress={auth.handleLogout}><ButtonText>Sair</ButtonText></Button>
+                        </>
                 }
             </View>
         </View>
@@ -26,8 +36,29 @@ export default function Login() {
 
 const style = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
         flex: 1
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    present1: {
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
+    present2: {
+        fontSize: 15
+    },
+    profileFrame: {
+        width: 80,
+        height: 80,
+        backgroundColor: "black",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    profilePhoto: {
+        width: 75,
+        height: 75,
+        backgroundColor: "green"
     }
 })
