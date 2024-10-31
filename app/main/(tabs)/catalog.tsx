@@ -5,12 +5,14 @@ import { useCatalogDatabase } from "@/database/useCatalogDatabase";
 import { CatalogProps } from "@/interfaces";
 import StyledTitle from '@/components/styled-title';
 import { useAuth } from '@/context/auth';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function MyCatalog() {
     const [data, setData] = useState<CatalogProps[]>([]);
     const auth = useAuth();
     const router = useRouter();
     const catalog = useCatalogDatabase();
+    const focus = useIsFocused();
 
     async function loadData() {
         const catalogRes = await catalog.getCatalogImage(auth.userInfo.email);
@@ -35,7 +37,7 @@ export default function MyCatalog() {
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [focus]);
 
     return (
         <View>
