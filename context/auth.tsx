@@ -37,6 +37,7 @@ interface IAuthContext {
     handleUpdate: (user: IEditProfile) => void
     edit:IEditProfile
     setEdit: (edit: IEditProfile) => void
+    handleChangePass: (oldPass: string, newPass: string) => void
 }
 
 interface IAuthProviderProps {
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
             return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        await api.post('/registrar',
+        await api.post('/auth/registrar',
             { name: userRegister.name, form: userRegister.form, email: userRegister.email, password: userRegister.password })
             .then((res) => {
                 if (res.status == 201) {
@@ -86,13 +87,13 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
         if (!user || !user.email || !user.password) return ToastAndroid.showWithGravity('Digite suas credenciais!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        await api.post('/login', { email: user.email, password: user.password })
-            .then((res) => {
+        await api.post('/auth/login', { email: user.email, password: user.password })
+            .then(async (res) => {
                 ToastAndroid.showWithGravity('Login efetuado com sucesso', ToastAndroid.SHORT, ToastAndroid.TOP);
 
                 setData(res.data.user);
                 setUser({} as IUserLogin);
-                SecureStore.setItemAsync('token', res.data.token);
+                await SecureStore.setItemAsync('token', res.data.token);
 
                 setIsLogged(true);
                 router.replace('/main/(tabs)/');
@@ -108,7 +109,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     const handleLogout = async () => {
         if (data.email != 'local') {
-            await api.post('/logout', { email: data.email })
+            await api.post('/auth/logout', { email: data.email })
                 .then((res) => {
                     if (res.status == 200) {
                         setData({} as UserProps);
@@ -119,7 +120,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
                         ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
                     }
-                }).catch((e) => {
+                }).catch((err) => {
                     ToastAndroid.showWithGravity("Erro ao efetuar logout!", ToastAndroid.SHORT, ToastAndroid.TOP);
                 });
         }
@@ -144,12 +145,27 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
                     }
                 }).catch((e) => {
                     ToastAndroid.showWithGravity("Erro ao efetuar logout!", ToastAndroid.SHORT, ToastAndroid.TOP);
+                })
+        }
+    }
+
+    const handleChangePass = async (oldPass: string, newPass: string) => {
+        if (oldPass && newPass) {
+            const authorization = await SecureStore.getItemAsync('token');
+
+            await api.post('/auth/changePass', { oldPass, newPass }, { headers: { authorization } })
+                .then((res) => {
+                    if (res.status == 200) {
+                        ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
+                    }
+                }).catch((err) => {
+                    ToastAndroid.showWithGravity(err.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
                 });
         }
     }
 
     return (
-        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, edit, setEdit, handleRegister, handleLogin, handleLogout, handleUpdate, userInfo: data, isLogged }}>
+        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleChangePass, handleUpdate, edit, setEdit, userInfo: data, isLogged }}>
             {children}
         </AuthContext.Provider>
     )
