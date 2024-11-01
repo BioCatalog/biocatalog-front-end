@@ -27,6 +27,7 @@ interface IAuthContext {
     handleRegister: () => void
     handleLogin: (wAccount?: boolean) => void
     handleLogout: () => void
+    handleUpdate: () => void
 }
 
 interface IAuthProviderProps {
@@ -114,32 +115,31 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         }
     }
 
-    async function handleUpdate() {
+    const handleUpdate = async () => {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
             return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        await api.post('/registrar',
-            { name: userRegister.name, form: userRegister.form, email: userRegister.email, password: userRegister.password })
-            .then((res) => {
-                if (res.status == 201) {
-                    Alert.alert('Sucesso', 'Usuário registrado com sucesso!');
-                    router.replace('/');
-                    setUserRegister({} as IUserRegister);
-                } else {
-                    Alert.alert('Erro', 'Falha ao registrar usuário.');
-                }
-            })
-            .catch((e) => {
-                if (!e.status) {
-                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
-                } else {
-                    ToastAndroid.showWithGravity(e.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
-                }
-            });
+        ////////////////////////////////////
+        if (data.email != 'local') {
+            await api.post('/logout', { email: data.email })
+                .then((res) => {
+                    if (res.status == 200) {
+                        setData({} as UserProps);
+                        setIsLogged(false);
+                        SecureStore.deleteItemAsync('token');
+
+                        router.replace('/');
+
+                        ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
+                    }
+                }).catch((e) => {
+                    ToastAndroid.showWithGravity("Erro ao efetuar logout!", ToastAndroid.SHORT, ToastAndroid.TOP);
+                });
+        }
     }
 
     return (
-        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, userInfo: data, isLogged }}>
+        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleUpdate, userInfo: data, isLogged }}>
             {children}
         </AuthContext.Provider>
     )

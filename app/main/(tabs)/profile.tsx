@@ -17,7 +17,7 @@ export default function Login() {
             <Text style={style.present2}>{auth.userInfo.form}</Text>
             <Text style={style.present1}>E-mail:</Text>
             <Text style={style.present2}>{auth.userInfo.email}</Text>
-            <View style={{marginTop: 20, width: '75%'}}>
+            <View style={{ marginTop: 20, width: '75%' }}>
                 {
                     auth.userInfo.email == 'local' ?
                         <StyledConfirmation
@@ -25,8 +25,8 @@ export default function Login() {
                             secClick={() => { router.navigate("/") }} secLabel="Login" secColor="blue" />
                         :
                         <>
-                        <Button style={{ backgroundColor: '#297d28' }} onPress={() => { router.replace('/main/content/editProfile') }}><ButtonText>Editar</ButtonText></Button>
-                        <Button style={{ backgroundColor: '#A41718' }} onPress={auth.handleLogout}><ButtonText>Sair</ButtonText></Button>
+                            <Button style={{ backgroundColor: '#297d28' }} onPress={() => { router.replace('/main/content/editProfile/') }}><ButtonText>Editar</ButtonText></Button>
+                            <Button style={{ backgroundColor: '#A41718' }} onPress={auth.handleLogout}><ButtonText>Sair</ButtonText></Button>
                         </>
                 }
             </View>
