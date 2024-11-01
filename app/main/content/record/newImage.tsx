@@ -1,8 +1,9 @@
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import * as FileSystem from 'expo-file-system'
 import StyledButton from "@/components/styled-button";
+import { Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@/components/ui/slider";
 interface CameraProps {
     onCancel: () => void
     setPhotos: React.Dispatch<React.SetStateAction<string[]>>
@@ -13,6 +14,7 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
     const [perm, reqPerm] = useCameraPermissions();
     const [tempPhoto, setTempPhoto] = useState('');
     const [load, setLoad] = useState(false);
+    const [zoom, setZoom] = useState(0);
 
     const date = new Date();
 
@@ -72,9 +74,26 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
                     </>
                     :
                     <CameraView
+                        zoom={(zoom / 100)}
                         facing="back"
                         ref={(ref) => { camera = ref }}
                         style={styles.camera}>
+
+                        <View style={{ flexGrow: 1, width: '100%', justifyContent: 'center' }}>
+                            <View style={{ height: '50%', marginRight: 30, alignSelf: "flex-end" }}>
+                                <Slider
+                                    onChange={setZoom}
+                                    orientation="vertical"
+                                    minValue={0}
+                                    maxValue={100}>
+                                    <SliderTrack>
+                                        <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb size="lg" />
+                                </Slider>
+                            </View>
+                        </View>
+
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.button}>
                                 <StyledButton load={load} text="Cancelar" color="red" onClick={onCancel} />
@@ -84,7 +103,7 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
                     </CameraView>
             }
 
-        </View>
+        </View >
     )
 }
 
@@ -99,20 +118,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        height: '100%',
-        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute',
-        zIndex: 1,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         backgroundColor: 'grey'
     },
     buttonContainer: {
-        flex: 1,
+        flexShrink: 1,
         flexDirection: 'row',
         backgroundColor: 'transparent',
         margin: 10,
