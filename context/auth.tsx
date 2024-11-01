@@ -17,6 +17,13 @@ interface IUserRegister {
     name: string
 }
 
+interface IEditProfile {
+    email: string
+    password: string
+    form: string
+    name: string
+}
+
 interface IAuthContext {
     isLogged: boolean
     userInfo: UserProps
@@ -27,7 +34,9 @@ interface IAuthContext {
     handleRegister: () => void
     handleLogin: (wAccount?: boolean) => void
     handleLogout: () => void
-    handleUpdate: () => void
+    handleUpdate: (user: IEditProfile) => void
+    edit:IEditProfile
+    setEdit: (edit: IEditProfile) => void
 }
 
 interface IAuthProviderProps {
@@ -41,6 +50,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<IUserLogin>({} as IUserLogin);
     const [data, setData] = useState<UserProps>({} as UserProps);
     const [isLogged, setIsLogged] = useState(false);
+    const [edit, setEdit] = useState<IEditProfile>({} as IEditProfile);
 
     async function handleRegister() {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
@@ -139,7 +149,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleUpdate, userInfo: data, isLogged }}>
+        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, edit, setEdit, handleRegister, handleLogin, handleLogout, handleUpdate, userInfo: data, isLogged }}>
             {children}
         </AuthContext.Provider>
     )

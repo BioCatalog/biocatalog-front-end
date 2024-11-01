@@ -10,9 +10,9 @@ export default function handleEdit() {
     return (
         <View>
             <ScrollView>
-                <StyledInput label="Senha atual" type="password" defaultValue={auth.userInfo.name}/>
-                <StyledInput label="Senha nova" type="password" defaultValue={auth.userInfo.name}/>
-                <StyledInput label="Confirmar senha nova" type="password" defaultValue={auth.userInfo.name}/>
+                <StyledInput placeholder="Senha atual" type="password" defaultValue={auth.userInfo.name}/>
+                <StyledInput placeholder="Senha nova" type="password" defaultValue={auth.userInfo.name}/>
+                <StyledInput placeholder="Confirme senha nova" type="password" defaultValue={auth.userInfo.name}/>
 
                 <StyledButton onClick={auth.handleUpdate} text="Salvar" color="#509044" />
             </ScrollView>

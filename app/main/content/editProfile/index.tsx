@@ -10,10 +10,10 @@ export default function handleEdit() {
     return (
         <View>
             <ScrollView>
-                <StyledInput label="Nome" type="text" defaultValue={auth.userInfo.name}/>
+                <StyledInput label="Nome" type="text" defaultValue={auth.userInfo.name} onChangeText={(data) => auth.setEdit({ ...auth.edit, name: data })}/>
                 <StyledInput label="Formação" type="text" defaultValue={auth.userInfo.form}/>
 
-                <StyledButton onClick={auth.handleUpdate} text="Salvar" color="#509044" />
+                <StyledButton onClick={() => auth.handleUpdate()} text="Salvar" color="#509044" />
             </ScrollView>
         </View>
     )
