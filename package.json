@@ -27,6 +27,7 @@
     "@gluestack-ui/nativewind-utils": "^1.0.23",
     "@gluestack-ui/overlay": "^0.1.15",
     "@gluestack-ui/select": "^0.1.29",
+    "@gluestack-ui/slider": "^0.1.25",
     "@gluestack-ui/textarea": "^0.1.23",
     "@gluestack-ui/toast": "^1.0.7",
     "@legendapp/motion": "^2.4.0",

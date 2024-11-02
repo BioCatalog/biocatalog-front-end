@@ -55,19 +55,22 @@ export default function RegisterSpecie() {
     }, [photo, setPhoto]);
 
     return (
-        <View style={styles.container}>
-            {cameraVisible && <Camera photoIndex={photo.length} setPhotos={setPhoto} onCancel={handleCameraVisible} />}
+        cameraVisible ?
+            <Camera photoIndex={photo.length} setPhotos={setPhoto} onCancel={handleCameraVisible} />
+            :
+            <View style={styles.container}>
+                { }
 
-            <ScrollView style={styles.scrollView}>
-                <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
-                <CatalogInputs record={record} setRecord={setRecord} />
-            </ScrollView>
+                <ScrollView style={styles.scrollView}>
+                    <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
+                    <CatalogInputs record={record} setRecord={setRecord} />
+                </ScrollView>
 
-            <View style={styles.optionsView}>
-                <StyledConfirmation firClick={handleCancel} firLabel="Cancelar" secClick={handleRegister} secLabel="Registrar" />
+                <View style={styles.optionsView}>
+                    <StyledConfirmation firClick={handleCancel} firLabel="Cancelar" secClick={handleRegister} secLabel="Registrar" />
+                </View>
+
             </View>
-
-        </View>
     )
 }
 
