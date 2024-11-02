@@ -78,22 +78,21 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
                         facing="back"
                         ref={(ref) => { camera = ref }}
                         style={styles.camera}>
-
-                        <View style={{ flexGrow: 1, width: '100%', justifyContent: 'center' }}>
-                            <View style={{ height: '50%', marginRight: 30, alignSelf: "flex-end" }}>
+                        <View style={{ flexGrow: 1, width: '100%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                            <View style={{ height: '50%', paddingRight: 30 }}>
                                 <Slider
                                     onChange={setZoom}
                                     orientation="vertical"
                                     minValue={0}
-                                    maxValue={100}>
+                                    maxValue={100}
+                                    style={{ height: '100%', padding: 20 }}>
                                     <SliderTrack>
                                         <SliderFilledTrack />
                                     </SliderTrack>
-                                    <SliderThumb size="lg" />
+                                    <SliderThumb style={{ height: 20, width: 20, margin: 20 }} />
                                 </Slider>
                             </View>
                         </View>
-
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.button}>
                                 <StyledButton load={load} text="Cancelar" color="red" onClick={onCancel} />
@@ -108,19 +107,19 @@ export default function Camera({ onCancel, setPhotos, photoIndex }: CameraProps)
 }
 
 const styles = StyleSheet.create({
-    photo: {
-        height: '80%',
-        width: '80%'
-    },
-    camera: {
-        height: '100%',
-        width: '100%'
-    },
     container: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'grey'
+    },
+    photo: {
+        height: '80%',
+        width: '80%'
+    },
+    camera: {
+        flex: 1,
+        width: '100%'
     },
     buttonContainer: {
         flexShrink: 1,
