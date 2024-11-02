@@ -117,26 +117,13 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
 
     const handleUpdate = async (user: UserProps) => {
-        if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
-            return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
-
-        ////////////////////////////////////
-        if (data.email != 'local') {
-            await api.post('/logout', { email: data.email })
-                .then((res) => {
-                    if (res.status == 200) {
-                        setData({} as UserProps);
-                        setIsLogged(false);
-                        SecureStore.deleteItemAsync('token');
-
-                        router.replace('/');
-
-                        ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
-                    }
-                }).catch((e) => {
-                    ToastAndroid.showWithGravity("Erro ao efetuar logout!", ToastAndroid.SHORT, ToastAndroid.TOP);
-                })
-        }
+        if (!user.name || !user.form || !user.email) {
+            return ToastAndroid.showWithGravity('Nenhum dos campos pode estar vazio!', ToastAndroid.SHORT, ToastAndroid.TOP);
+          }
+          
+          if (user.name === data.name && user.form === data.form && user.email === data.email) {
+            return ToastAndroid.showWithGravity('Nenhuma alteração foi realizada.', ToastAndroid.SHORT, ToastAndroid.TOP);
+          }
     }
 
     const handleChangePass = async (oldPass: string, newPass: string) => {
