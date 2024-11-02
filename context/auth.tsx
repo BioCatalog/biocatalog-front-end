@@ -17,13 +17,6 @@ interface IUserRegister {
     name: string
 }
 
-interface IEditProfile {
-    email: string
-    password: string
-    form: string
-    name: string
-}
-
 interface IAuthContext {
     isLogged: boolean
     userInfo: UserProps
@@ -34,9 +27,7 @@ interface IAuthContext {
     handleRegister: () => void
     handleLogin: (wAccount?: boolean) => void
     handleLogout: () => void
-    handleUpdate: (user: IEditProfile) => void
-    edit:IEditProfile
-    setEdit: (edit: IEditProfile) => void
+    handleUpdate: (user: UserProps) => void
     handleChangePass: (oldPass: string, newPass: string) => void
 }
 
@@ -51,7 +42,6 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<IUserLogin>({} as IUserLogin);
     const [data, setData] = useState<UserProps>({} as UserProps);
     const [isLogged, setIsLogged] = useState(false);
-    const [edit, setEdit] = useState<IEditProfile>({} as IEditProfile);
 
     async function handleRegister() {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
@@ -126,7 +116,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         }
     }
 
-    const handleUpdate = async () => {
+    const handleUpdate = async (user: UserProps) => {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
             return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
@@ -165,7 +155,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleChangePass, handleUpdate, edit, setEdit, userInfo: data, isLogged }}>
+        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleChangePass, handleUpdate, userInfo: data, isLogged }}>
             {children}
         </AuthContext.Provider>
     )
