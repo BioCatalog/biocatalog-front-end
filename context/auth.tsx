@@ -117,7 +117,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     }
 
     const handleUpdate = async (user: UserProps) => {
-        if (!user.name || !user.form || !user.email) {
+        if (!user.name && !user.form && !user.email) {
             return ToastAndroid.showWithGravity('Nenhum dos campos pode estar vazio!', ToastAndroid.SHORT, ToastAndroid.TOP);
         }
 
@@ -125,10 +125,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             return ToastAndroid.showWithGravity('Nenhuma alteração foi realizada.', ToastAndroid.SHORT, ToastAndroid.TOP);
         }
 
+        const authorization = await SecureStore.getItemAsync('token');
+
         await api.put('/auth/updateUser',
-            { name: user.name, form: user.form, email: user.email})
+            { name: user.name ?? data.name, form: user.form ?? data.form, email: user.email ?? data.email}, { headers: { authorization } })
             .then((res) => {
-                if (res.status == 201) {
+                if (res.status == 200) {
                     Alert.alert('Sucesso', 'Usuário editado com sucesso!');
                     setUserRegister({} as IUserRegister);
                 } else {

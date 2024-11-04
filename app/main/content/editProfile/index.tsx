@@ -21,6 +21,8 @@ export default function handleEdit() {
 
                 <StyledButton onClick={() => auth.handleUpdate(edit)} text="Salvar" color="#297d28" />
                 <StyledButton onClick={() => { router.replace('/main/(tabs)/profile') }} text="Voltar" color="#469158" />
+
+                <StyledButton onClick={() => { router.replace('/main/content/editProfile/editPass') }} text="Editar senha" color="#469158" />
             </ScrollView>
         </View>
     )

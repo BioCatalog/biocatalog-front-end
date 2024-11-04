@@ -10,8 +10,8 @@ export default function handleEdit() {
 
     const auth = useAuth();
     
-    const [oldPass, setOldPass] = useState();
-    const [newPass, setNewPass] = useState();
+    const [oldPass, setOldPass] = useState("");
+    const [newPass, setNewPass] = useState("");
 
     return (
         <View>
