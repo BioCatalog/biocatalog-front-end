@@ -119,11 +119,29 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const handleUpdate = async (user: UserProps) => {
         if (!user.name || !user.form || !user.email) {
             return ToastAndroid.showWithGravity('Nenhum dos campos pode estar vazio!', ToastAndroid.SHORT, ToastAndroid.TOP);
-          }
-          
-          if (user.name === data.name && user.form === data.form && user.email === data.email) {
+        }
+
+        if (user.name === data.name && user.form === data.form && user.email === data.email) {
             return ToastAndroid.showWithGravity('Nenhuma alteração foi realizada.', ToastAndroid.SHORT, ToastAndroid.TOP);
-          }
+        }
+
+        await api.put('/auth/updateUser',
+            { name: user.name, form: user.form, email: user.email})
+            .then((res) => {
+                if (res.status == 201) {
+                    Alert.alert('Sucesso', 'Usuário editado com sucesso!');
+                    setUserRegister({} as IUserRegister);
+                } else {
+                    Alert.alert('Erro', 'Falha ao editar usuário.');
+                }
+            })
+            .catch((e) => {
+                if (!e.status) {
+                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
+                } else {
+                    ToastAndroid.showWithGravity(e.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+            });
     }
 
     const handleChangePass = async (oldPass: string, newPass: string) => {
