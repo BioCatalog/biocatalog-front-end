@@ -10,12 +10,12 @@ import Camera from "./newImage";
 import * as FileSystem from 'expo-file-system'
 import { RecordProps } from "@/interfaces";
 import { useRecordDatabase } from "@/database/useRecordDatabase";
+import StyledConfirmation from "@/components/styled-confirmation";
 
 export default function RegisterSpecie() {
     const [record, setRecord] = useState<RecordProps>({} as RecordProps);
     const [photo, setPhoto] = useState<string[]>([]);
     const [cameraVisible, setCameraVisible] = useState(false);
-
     const recordDatabase = useRecordDatabase();
 
     function clearRecord() {
@@ -23,7 +23,7 @@ export default function RegisterSpecie() {
     }
 
     async function handleRegister() {
-        if (record && record.imageURL) {
+        if (record && record.imageURL && record.imageURL.length && record.comment && record.catalog) {
             await recordDatabase.create(record).then(() => {
                 ToastAndroid.showWithGravity('Evidencia registrada!', ToastAndroid.SHORT, ToastAndroid.TOP);
                 router.replace('/main/(tabs)/catalog');
@@ -32,6 +32,8 @@ export default function RegisterSpecie() {
             }).finally(() => {
                 clearRecord();
             });
+        } else {
+            ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
         }
     }
 
@@ -49,24 +51,26 @@ export default function RegisterSpecie() {
     }
 
     useEffect(() => {
-        setRecord({...record, imageURL: photo.map((item) => ({imageURL: item}))});
+        setRecord({ ...record, imageURL: photo.map((item) => ({ imageURL: item })) });
     }, [photo, setPhoto]);
 
     return (
-        <View style={styles.container}>
-            {cameraVisible && <Camera photoIndex={photo.length} setPhotos={setPhoto} onCancel={handleCameraVisible} />}
+        cameraVisible ?
+            <Camera photoIndex={photo.length} setPhotos={setPhoto} onCancel={handleCameraVisible} />
+            :
+            <View style={styles.container}>
+                { }
 
-            <ScrollView style={styles.scrollView}>
-                <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
-                <CatalogInputs record={record} setRecord={setRecord} />
-            </ScrollView>
+                <ScrollView style={styles.scrollView}>
+                    <PhotoBox photosURL={photo} setPhotos={setPhoto} onAdd={handleCameraVisible} />
+                    <CatalogInputs record={record} setRecord={setRecord} />
+                </ScrollView>
 
-            <View style={styles.optionsView}>
-                <StyledButton text="Cancelar" color="red" onClick={handleCancel} />
-                <StyledButton text="Registrar" color="green" onClick={handleRegister} />
+                <View style={styles.optionsView}>
+                    <StyledConfirmation firClick={handleCancel} firLabel="Cancelar" secClick={handleRegister} secLabel="Registrar" />
+                </View>
+
             </View>
-
-        </View>
     )
 }
 
@@ -81,12 +85,8 @@ const styles = StyleSheet.create({
 
     optionsView: {
         position: 'absolute',
+        width: '100%',
         bottom: 20,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
     },
 
     scrollView: {

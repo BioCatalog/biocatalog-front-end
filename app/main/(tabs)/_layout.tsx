@@ -1,16 +1,20 @@
+import Header from '@/components/layout/header';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs, router } from 'expo-router';
 import React from 'react';
 export default function TabLayout() {
 
   return (
-    <Tabs screenOptions={{
-      headerTintColor: 'white',
-      tabBarActiveTintColor: '#27AE60',
-      tabBarInactiveTintColor: 'black',
-      tabBarStyle: { backgroundColor: '#C1F4AF' },
-      headerStyle: { backgroundColor: 'green' },
-    }}>
+    <Tabs
+      backBehavior='history'
+      screenOptions={{
+        header: ({ options }) => (<Header title={options.title} />),
+        headerTintColor: 'white',
+        tabBarActiveTintColor: '#27AE60',
+        tabBarInactiveTintColor: 'black',
+        tabBarStyle: { backgroundColor: '#C1F4AF' },
+        headerStyle: { backgroundColor: 'green' },
+      }}>
       <Tabs.Screen
         name="index"
         options={{

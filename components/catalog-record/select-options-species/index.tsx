@@ -3,6 +3,7 @@ import { ButtonIcon, Button } from "@/components/ui/button";
 import { AddIcon, Icon } from "@/components/ui/icon";
 import { useAuth } from "@/context/auth";
 import { useCatalogDatabase } from "@/database/useCatalogDatabase";
+import { useIsFocused } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -16,6 +17,7 @@ export default function SelectOptionsSpecies({ onChange }: SOSpeciesProps) {
     const [options, setOptions] = useState<Array<{ name: string, id: string }>>([]);
     const catalog = useCatalogDatabase();
     const auth = useAuth();
+    const focus = useIsFocused();
 
     async function loadOptions() {
         const opt = await catalog.getAsOption(auth.userInfo.email);
@@ -27,14 +29,14 @@ export default function SelectOptionsSpecies({ onChange }: SOSpeciesProps) {
 
     useEffect(() => {
         loadOptions();
-    }, []);
+    }, [focus]);
 
     return (
         <View style={styles.container}>
             <View style={styles.select_input_container}>
                 <StyledInput type="select-options" label="Especie" options={options} onChangeText={onChange} placeholder="Selecione a Especie" />
             </View>
-            <Button size="lg" className="rounded-full p-3.5" style={styles.addButon} onPress={() => { router.push('/main/content/collection') }}>
+            <Button size="lg" className="rounded-full p-3.5" style={styles.addButon} onPress={() => { router.navigate('/main/(tabs)/collection') }}>
                 <ButtonIcon>
                     <Icon as={AddIcon} />
                 </ButtonIcon>

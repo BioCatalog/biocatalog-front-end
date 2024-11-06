@@ -1,21 +1,7 @@
-import { StyleSheet, Text, View} from "react-native";
-import { useEffect } from "react";
-import { router } from "expo-router";
+import RegisterSpecie from "../content/record/register";
 
 export default function NewEvidence() {
-    useEffect(() => { router.replace('/main/content/record/register') }, []);
-
-    return (        
-        <View>
-            <Text>Redirecionando...</Text>
-        </View>
+    return (
+        <RegisterSpecie />
     )
 }
-
-const style = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignSelf: 'center',
-        flex: 1
-    }
-})

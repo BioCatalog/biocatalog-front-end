@@ -27,6 +27,8 @@ interface IAuthContext {
     handleRegister: () => void
     handleLogin: (wAccount?: boolean) => void
     handleLogout: () => void
+    handleUpdate: (user: UserProps) => void
+    handleChangePass: (oldPass: string, newPass: string) => void
 }
 
 interface IAuthProviderProps {
@@ -45,7 +47,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         if (!userRegister || !userRegister.email || !userRegister.password || !userRegister.form || !userRegister.name)
             return ToastAndroid.showWithGravity('Preencha todos os campos!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        await api.post('/registrar',
+        await api.post('/auth/registrar',
             { name: userRegister.name, form: userRegister.form, email: userRegister.email, password: userRegister.password })
             .then((res) => {
                 if (res.status == 201) {
@@ -75,13 +77,13 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
         if (!user || !user.email || !user.password) return ToastAndroid.showWithGravity('Digite suas credenciais!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
-        await api.post('/login', { email: user.email, password: user.password })
-            .then((res) => {
+        await api.post('/auth/login', { email: user.email, password: user.password })
+            .then(async (res) => {
                 ToastAndroid.showWithGravity('Login efetuado com sucesso', ToastAndroid.SHORT, ToastAndroid.TOP);
 
                 setData(res.data.user);
                 setUser({} as IUserLogin);
-                SecureStore.setItemAsync('token', res.data.token);
+                await SecureStore.setItemAsync('token', res.data.token);
 
                 setIsLogged(true);
                 router.replace('/main/(tabs)/');
@@ -97,7 +99,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
     const handleLogout = async () => {
         if (data.email != 'local') {
-            await api.post('/logout', { email: data.email })
+            await api.post('/auth/logout', { email: data.email })
                 .then((res) => {
                     if (res.status == 200) {
                         setData({} as UserProps);
@@ -108,14 +110,59 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
                         ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
                     }
-                }).catch((e) => {
+                }).catch((err) => {
                     ToastAndroid.showWithGravity("Erro ao efetuar logout!", ToastAndroid.SHORT, ToastAndroid.TOP);
                 });
         }
     }
 
+    const handleUpdate = async (user: UserProps) => {
+        if (!user.name && !user.form && !user.email) {
+            return ToastAndroid.showWithGravity('Nenhum dos campos pode estar vazio!', ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+
+        if (user.name === data.name && user.form === data.form && user.email === data.email) {
+            return ToastAndroid.showWithGravity('Nenhuma alteração foi realizada.', ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+
+        const authorization = await SecureStore.getItemAsync('token');
+
+        await api.put('/auth/updateUser',
+            { name: user.name ?? data.name, form: user.form ?? data.form, email: user.email ?? data.email}, { headers: { authorization } })
+            .then((res) => {
+                if (res.status == 200) {
+                    Alert.alert('Sucesso', 'Usuário editado com sucesso!');
+                    setUserRegister({} as IUserRegister);
+                } else {
+                    Alert.alert('Erro', 'Falha ao editar usuário.');
+                }
+            })
+            .catch((e) => {
+                if (!e.status) {
+                    ToastAndroid.showWithGravity('Problema com o servidor, tente novamente mais tarde', ToastAndroid.SHORT, ToastAndroid.TOP);
+                } else {
+                    ToastAndroid.showWithGravity(e.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+            });
+    }
+
+    const handleChangePass = async (oldPass: string, newPass: string) => {
+        if (oldPass && newPass) {
+            const authorization = await SecureStore.getItemAsync('token');
+
+            await api.post('/auth/changePass', { oldPass, newPass }, { headers: { authorization } })
+                .then((res) => {
+                    if (res.status == 200) {
+                        ToastAndroid.showWithGravity(res.data.message, ToastAndroid.SHORT, ToastAndroid.TOP);
+                    }
+                }).catch((err) => {
+                    ToastAndroid.showWithGravity(err.response.data.error, ToastAndroid.SHORT, ToastAndroid.TOP);
+                });
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, userInfo: data, isLogged }}>
+        <AuthContext.Provider value={{ userRegister, setUserRegister, user, setUser, handleRegister, handleLogin, handleLogout, handleChangePass, handleUpdate, userInfo: data, isLogged }}>
             {children}
         </AuthContext.Provider>
     )
